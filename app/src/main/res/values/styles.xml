@@ -25,7 +25,8 @@
     <style name="AppTheme.Text.Gray.Normal" parent="android:TextAppearance">
         <item name="android:textColor">@color/textColorGrey</item>
         <item name="android:textSize">14sp</item>
-    </style>                               \
+    </style>
+    \
 
     <style name="AppTheme.Text.Light.Normal" parent="android:TextAppearance">
         <item name="android:textColor">@color/textColorLight</item>

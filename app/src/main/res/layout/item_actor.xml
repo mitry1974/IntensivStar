@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/actor_content"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:background="@color/blueDark">
+
     <ImageView
         android:id="@+id/actor_image"
         android:layout_width="96dp"
         android:layout_height="96dp" />
+
     <TextView
         android:id="@+id/actor_name"
-        android:textColor="@color/textColorGrey"
-        android:textSize="14sp"
-        android:textAlignment="center"
         android:layout_width="96dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Hulio\nEglesias"/>
+        android:text="Hulio\nEglesias"
+        android:textAlignment="center"
+        android:textColor="@color/textColorGrey"
+        android:textSize="14sp" />
 </LinearLayout>
