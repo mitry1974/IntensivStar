@@ -3,8 +3,8 @@ package ru.androidschool.intensiv.ui.movie_details
 import android.view.View
 import com.xwray.groupie.viewbinding.BindableItem
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.Actor
-import ru.androidschool.intensiv.data.Movie
+import ru.androidschool.intensiv.data.entity.Actor
+import ru.androidschool.intensiv.data.entity.Movie
 import ru.androidschool.intensiv.databinding.ItemActorBinding
 
 class ActorItem(

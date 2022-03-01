@@ -3,13 +3,17 @@ package ru.androidschool.intensiv.ui.feed
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
+import kotlinx.coroutines.launch
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.MockRepository
-import ru.androidschool.intensiv.data.Movie
+import ru.androidschool.intensiv.api.MoviesInterface
+import ru.androidschool.intensiv.data.entity.Movie
+import ru.androidschool.intensiv.data.repository.movies.MoviesRemoteDatasource
+import ru.androidschool.intensiv.data.repository.movies.MoviesRepository
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
 import ru.androidschool.intensiv.ui.afterTextChanged
@@ -19,6 +23,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
 
     private var _binding: FeedFragmentBinding? = null
     private var _searchBinding: FeedHeaderBinding? = null
+    private val repository by lazy {  MoviesRepository.getRepository() }
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -59,41 +64,53 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
             }
         }
 
-        // Используя Мок-репозиторий получаем фэйковый список фильмов
-        val moviesList = listOf(
-            MainCardContainer(
-                R.string.recommended,
-                MockRepository.getMovies().map {
-                    MovieItem(it) { movie ->
-                        openMovieDetails(
-                            movie
-                        )
-                    }
-                }.toList()
-            )
-        )
 
-        binding.moviesRecyclerView.adapter = adapter.apply { addAll(moviesList) }
+        initData()
+    }
 
-        // Используя Мок-репозиторий получаем фэйковый список фильмов
-        // Чтобы отобразить второй ряд фильмов
-        val newMoviesList = listOf(
-            MainCardContainer(
-                R.string.upcoming,
-                MockRepository.getMovies().map {
-                    MovieItem(it) { movie ->
-                        openMovieDetails(movie)
-                    }
-                }.toList()
-            )
-        )
+    private fun initView() {
+        val nowPlayingList = repository.nowPlaying.map {
+            MovieItem(it.value) { movie ->
+                openMovieDetails(
+                    movie
+                )
+            }
+        }
+        adapter.apply { addAll(listOf(MainCardContainer(R.string.recommended, nowPlayingList))) }
 
-        adapter.apply { addAll(newMoviesList) }
+
+        val upcomingList = repository.upcoming.map {
+            MovieItem(it.value) { movie ->
+                openMovieDetails(
+                    movie
+                )
+            }
+        }
+        adapter.apply { addAll(listOf(MainCardContainer(R.string.upcoming, upcomingList))) }
+
+        val popularList = repository.popular.map {
+            MovieItem(it.value) { movie ->
+                openMovieDetails(
+                    movie
+                )
+            }
+        }
+        adapter.apply { listOf(MainCardContainer(R.string.popular, popularList)) }
+    }
+
+    private fun initData() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repository.getNowPlaying()
+            repository.getPopular()
+            repository.getUpcoming()
+
+            initView()
+        }
     }
 
     private fun openMovieDetails(movie: Movie) {
         val bundle = Bundle()
-        bundle.putString(KEY_TITLE, movie.title)
+        bundle.putInt(KEY_ID, movie.id)
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)
     }
 
@@ -120,7 +137,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
 
     companion object {
         const val MIN_LENGTH = 3
-        const val KEY_TITLE = "title"
+        const val KEY_ID = "id"
         const val KEY_SEARCH = "search"
     }
 }

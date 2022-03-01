@@ -8,8 +8,9 @@ import androidx.fragment.app.Fragment
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.MockRepository
-import ru.androidschool.intensiv.data.Movie
+import ru.androidschool.intensiv.data.repository.mock.MockRepository
+import ru.androidschool.intensiv.data.entity.Movie
+import ru.androidschool.intensiv.data.repository.movies.MoviesRepository
 import ru.androidschool.intensiv.databinding.MovieDetailsFragmentBinding
 import ru.androidschool.intensiv.ui.feed.FeedFragment
 
@@ -20,12 +21,12 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
         GroupAdapter<GroupieViewHolder>()
     }
 
-    private val movieTitle by lazy {
-        arguments?.getString(FeedFragment.KEY_TITLE)
+    private val movieId by lazy {
+        arguments?.getInt(FeedFragment.KEY_ID)
     }
 
-    private fun getMovieByTitle(movieTitle: String?): Movie? =
-        MockRepository.getMovieByTitle(movieTitle)
+//    private fun getMovieById(movieTitle: String?): Movie? = ""
+//        //MockRepository.getMovieByTitle(movieTitle)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,21 +46,21 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
     }
 
     private fun updateView() {
-
-        val movie = getMovieByTitle(movieTitle)
-        movie?.let { it ->
-            val actorsItems = it.actors.map { actor -> ActorItem(actor) {} }
-            adapter.apply { addAll(actorsItems) }
-
-            binding.apply {
-                movieDetailsFilmName.text = movie.title
-                movieYear.text = movie.year.toString()
-                studio.text = movie.studio
-                genre.text = movie.genres.joinToString(", ")
-                rating.rating = movie.rating
-            }
-
-        }
+        val repository = MoviesRepository.getRepository()
+//        val movie = repositorygetMovieByTitle(movieTitle)
+//        movie?.let { it ->
+//            val actorsItems = it.actors.map { actor -> ActorItem(actor) {} }
+//            adapter.apply { addAll(actorsItems) }
+//
+//            binding.apply {
+//                movieDetailsFilmName.text = movie.title
+//                movieYear.text = movie.year.toString()
+//                studio.text = movie.studio
+//                genre.text = movie.genres.joinToString(", ")
+//                rating.rating = movie.rating
+//            }
+//
+//        }
     }
 }
 

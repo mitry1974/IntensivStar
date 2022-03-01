@@ -5,7 +5,7 @@ import android.view.View
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.viewbinding.BindableItem
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.Movie
+import ru.androidschool.intensiv.data.entity.Movie
 import ru.androidschool.intensiv.databinding.ItemTvShowBinding
 
 class TvShowItem(
