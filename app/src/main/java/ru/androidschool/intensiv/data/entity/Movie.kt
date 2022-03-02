@@ -10,7 +10,8 @@ class Movie(
     val voteAverage: Double = 0.0,
     val studio: String,
     val genres: List<Int>,
-    val actors: List<Actor>
+    val actors: List<Actor>,
+    val posterPath: String
 
 ) {
     constructor(movieResponse: MovieResponse) : this(
@@ -20,7 +21,8 @@ class Movie(
         voteAverage = movieResponse.voteAverage,
         studio = "",
         genres = movieResponse.genreIds,
-        actors = listOf()
+        actors = listOf(),
+        posterPath = movieResponse.posterPath
     )
 
     val rating: Float

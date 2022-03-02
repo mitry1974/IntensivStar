@@ -27,6 +27,7 @@ android {
     }
     buildTypes.each {
         it.buildConfigField 'String', 'SERVER_URL', serverUrl
+        it.buildConfigField 'String', 'IMAGE_URL', imageUrl
     }
 
     compileOptions {
