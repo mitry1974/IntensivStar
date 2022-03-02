@@ -10,9 +10,7 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.coroutines.launch
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.api.MoviesInterface
 import ru.androidschool.intensiv.data.entity.Movie
-import ru.androidschool.intensiv.data.repository.movies.MoviesRemoteDatasource
 import ru.androidschool.intensiv.data.repository.movies.MoviesRepository
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
@@ -64,11 +62,11 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
             }
         }
 
-
+        binding.moviesRecyclerView.adapter = adapter
         initData()
     }
 
-    private fun initView() {
+    private fun updateView() {
         val nowPlayingList = repository.nowPlaying.map {
             MovieItem(it.value) { movie ->
                 openMovieDetails(
@@ -104,7 +102,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
             repository.getPopular()
             repository.getUpcoming()
 
-            initView()
+            updateView()
         }
     }
 
