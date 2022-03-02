@@ -7,24 +7,24 @@
     android:orientation="vertical">
 
 
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/blueDark">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"                       
+            android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/image"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_avatar"
-                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize15Percent"
                 app:layout_constraintStart_toStartOf="@id/content_start"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize15Percent" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/content_start"
@@ -46,7 +46,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Film name"
-                app:layout_constraintEnd_toStartOf="@+id/film_details_favorites"
                 app:layout_constraintStart_toStartOf="@id/content_start"
                 app:layout_constraintTop_toBottomOf="@id/image" />
 
@@ -55,9 +54,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
-                android:button="@drawable/checkbox"
                 android:background="@color/blueDark"
+                android:button="@drawable/checkbox"
                 app:layout_constraintBottom_toBottomOf="@id/movie_details_film_name"
                 app:layout_constraintEnd_toEndOf="@id/content_end" />
 
@@ -67,8 +67,8 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="4dp"
-                android:text="Смотреть"
                 android:background="@drawable/watch_button_style"
+                android:text="Смотреть"
                 app:layout_constraintStart_toStartOf="@id/content_start"
                 app:layout_constraintTop_toBottomOf="@id/movie_details_film_name" />
 
