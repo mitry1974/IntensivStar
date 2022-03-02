@@ -21,5 +21,26 @@
         <item name="cornerSize">10%</item>
     </style>
 
+    <style name="ShapeAppearanceOverlay.App.CornerSize15Percent" parent="">
+        <item name="cornerSizeBottomRight">15%</item>
+        <item name="cornerSizeBottomLeft">15%</item>
+    </style>
 
+    <style name="AppTheme.Text.Sized.Normal" parent="android:TextAppearance">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="AppTheme.Text.Gray.Normal" parent="AppTheme.Text.Sized.Normal">
+        <item name="android:textColor">@color/textColorGrey</item>
+    </style>
+
+    <style name="AppTheme.Text.Light.Normal" parent="AppTheme.Text.Sized.Normal">
+        <item name="android:textColor">@color/textColorLight</item>
+    </style>
+    
+    <style name="AppTheme.Title.TextAppearance" parent="android:TextAppearance">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@color/textColorLight</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>
