@@ -78,7 +78,7 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
 //                Picasso.get()
 //                    .load(movieDetails.posterPath)
 //                    .into(view.)
-//            }
+            }
 
         }
     }
