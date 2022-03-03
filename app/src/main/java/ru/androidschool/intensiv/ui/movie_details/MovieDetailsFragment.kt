@@ -20,10 +20,12 @@ import ru.androidschool.intensiv.ui.feed.FeedFragment
 class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
     private lateinit var binding: MovieDetailsFragmentBinding
 
+    private val repository by lazy { MoviesRepository.getRepository() }
+
     private lateinit var movieDetails: MovieDetails
     private lateinit var actors: List<Actor>
 
-    private val repository by lazy { MoviesRepository.getRepository() }
+
 
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
@@ -63,17 +65,17 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
     private fun updateView() {
 
 
-        movieDetails?.let { it ->
+        movieDetails?.let { md ->
             val actorsItems = actors.map { actor -> ActorItem(actor) {} }
             adapter.apply { addAll(actorsItems) }
 
             binding.apply {
-                movieDetailsFilmName.text = movieDetails.title
-                movieYear.text = movieDetails.year
-                studio.text = movieDetails.productionCompanies
-                genre.text = movieDetails.genre
-                overview.text = movieDetails.overview
-                rating.rating = movieDetails.voteAverage / 2
+                movieDetailsFilmName.text = md.title
+                movieYear.text = md.year
+                studio.text = md.productionCompanies
+                genre.text = md.genre
+                overview.text = md.overview
+                rating.rating = md.voteAverage / 2
 
                 Picasso.get()
                     .load(movieDetails.posterPath)

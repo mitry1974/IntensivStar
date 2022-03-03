@@ -7,10 +7,7 @@ import retrofit2.Response
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
-import ru.androidschool.intensiv.api.model.CreditsResponse
-import ru.androidschool.intensiv.api.model.GenresResponse
-import ru.androidschool.intensiv.api.model.MovieDetailsResponse
-import ru.androidschool.intensiv.api.model.MoviesResponse
+import ru.androidschool.intensiv.api.model.*
 import ru.androidschool.intensiv.util.Constants
 
 interface MoviesInterface {
@@ -31,6 +28,9 @@ interface MoviesInterface {
 
     @GET("movie/{movie_id}")
     suspend fun loadMovieDetails(@Path("movie_id") movieId: Int): Response<MovieDetailsResponse>
+
+    @GET("tv/popular")
+    suspend fun loadTvShows(): Response<TvShowsListResponse>
 
     companion object Factory {
         private fun getOkHttpClient(): OkHttpClient {

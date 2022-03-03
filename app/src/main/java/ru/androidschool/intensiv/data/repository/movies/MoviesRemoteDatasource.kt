@@ -3,12 +3,9 @@ package ru.androidschool.intensiv.data.repository.movies
 import ru.androidschool.intensiv.api.BaseRemoteDataSource
 import ru.androidschool.intensiv.api.MoviesInterface
 import ru.androidschool.intensiv.api.Result
-import ru.androidschool.intensiv.api.model.CreditsResponse
-import ru.androidschool.intensiv.api.model.GenresResponse
-import ru.androidschool.intensiv.api.model.MovieDetailsResponse
-import ru.androidschool.intensiv.api.model.MoviesResponse
+import ru.androidschool.intensiv.api.model.*
 
-class MoviesRemoteDatasource(private val service: MoviesInterface): BaseRemoteDataSource() {
+class MoviesRemoteDatasource(private val service: MoviesInterface) : BaseRemoteDataSource() {
     suspend fun loadNowPlaying(): Result<MoviesResponse> =
         getResult {
             service.loadNowPlaying()
@@ -37,5 +34,10 @@ class MoviesRemoteDatasource(private val service: MoviesInterface): BaseRemoteDa
     suspend fun loadMovieDetails(movieId: Int): Result<MovieDetailsResponse> =
         getResult {
             service.loadMovieDetails(movieId)
+        }
+
+    suspend fun loadTvShows(): Result<TvShowsListResponse> =
+        getResult {
+            service.loadTvShows()
         }
 }

@@ -4,10 +4,7 @@ import ru.androidschool.intensiv.api.MoviesInterface
 import ru.androidschool.intensiv.api.Result
 import ru.androidschool.intensiv.api.model.MoviesResponse
 import ru.androidschool.intensiv.api.successed
-import ru.androidschool.intensiv.data.entity.Actor
-import ru.androidschool.intensiv.data.entity.Genre
-import ru.androidschool.intensiv.data.entity.Movie
-import ru.androidschool.intensiv.data.entity.MovieDetails
+import ru.androidschool.intensiv.data.entity.*
 
 class MoviesRepository private constructor(private val remoteDatasource: MoviesRemoteDatasource) {
     lateinit var nowPlaying: Map<Int, Movie>
@@ -62,6 +59,17 @@ class MoviesRepository private constructor(private val remoteDatasource: MoviesR
             throw Exception("Error loading movie details")
         }
     }
+
+    suspend fun getTvShows(): List<TvShow> {
+        val result = remoteDatasource.loadTvShows()
+        return if (result is Result.Success && result.successed) {
+            result.data.results.map { TvShow(it.id, it.name, it.voteAverage, it.posterPath)}
+        } else {
+            throw Exception("Error loading movie details")
+        }
+    }
+
+
 
     companion object {
         fun getRepository(): MoviesRepository = MoviesRepository(

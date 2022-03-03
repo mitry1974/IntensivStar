@@ -5,14 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
+import kotlinx.coroutines.launch
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.repository.mock.MockRepository
+import ru.androidschool.intensiv.data.entity.TvShow
+import ru.androidschool.intensiv.data.repository.movies.MoviesRepository
 import ru.androidschool.intensiv.databinding.TvShowsFragmentBinding
 
 class TvShowsFragment : Fragment(R.layout.tv_shows_fragment) {
     private lateinit var binding: TvShowsFragmentBinding
+
+    private val repository by lazy { MoviesRepository.getRepository() }
+
+    private lateinit var tvShowsList: List<TvShow>
 
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
@@ -33,9 +40,21 @@ class TvShowsFragment : Fragment(R.layout.tv_shows_fragment) {
 
         binding.tvShowsRecyclerView.adapter = adapter
 
-//        val moviesList =
-//            MockRepository.getMovies().map { TvShowItem(it) {} }.toList()
-//
-//        adapter.apply { addAll(moviesList) }
+        initData()
+    }
+
+    private fun initData() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            tvShowsList = repository.getTvShows()
+            updateView()
+        }
+    }
+
+    private fun updateView() {
+
+        val tvShowItems = tvShowsList.map {
+            TvShowItem(it) {}
+        }
+        adapter.apply { addAll(tvShowItems) }
     }
 }
