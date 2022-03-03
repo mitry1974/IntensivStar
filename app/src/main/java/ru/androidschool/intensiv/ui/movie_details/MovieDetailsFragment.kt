@@ -75,9 +75,9 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
                 overview.text = movieDetails.overview
                 rating.rating = movieDetails.voteAverage / 2
 
-//                Picasso.get()
-//                    .load(movieDetails.posterPath)
-//                    .into(view.)
+                Picasso.get()
+                    .load(movieDetails.posterPath)
+                    .into(image)
             }
 
         }
