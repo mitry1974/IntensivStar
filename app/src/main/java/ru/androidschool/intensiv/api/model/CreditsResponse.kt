@@ -1,8 +1,16 @@
 package ru.androidschool.intensiv.api.model
 
+import com.google.gson.annotations.SerializedName
+import ru.androidschool.intensiv.util.Constants
+
 data class CreditResponse(
     val name: String
-)
+) {
+    @SerializedName("profile_path")
+    val profilePath: String = ""
+        get() = "${Constants.IMAGE_URL}$field"
+}
+
 data class CreditsResponse(
-    val casts: List<CreditResponse>
+    val cast: List<CreditResponse>
 )

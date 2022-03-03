@@ -1,3 +1,3 @@
 package ru.androidschool.intensiv.data.entity
 
-data class Actor(val name: String)
+data class Actor(val name: String, val profilePath: String)

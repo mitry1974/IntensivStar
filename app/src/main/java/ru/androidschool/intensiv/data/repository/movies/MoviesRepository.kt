@@ -7,8 +7,9 @@ import ru.androidschool.intensiv.api.successed
 import ru.androidschool.intensiv.data.entity.Actor
 import ru.androidschool.intensiv.data.entity.Genre
 import ru.androidschool.intensiv.data.entity.Movie
+import ru.androidschool.intensiv.data.entity.MovieDetails
 
-class MoviesRepository private constructor (val remoteDatasource: MoviesRemoteDatasource) {
+class MoviesRepository private constructor(private val remoteDatasource: MoviesRemoteDatasource) {
     lateinit var nowPlaying: Map<Int, Movie>
     lateinit var upcoming: Map<Int, Movie>
     lateinit var popular: Map<Int, Movie>
@@ -44,26 +45,29 @@ class MoviesRepository private constructor (val remoteDatasource: MoviesRemoteDa
         }
     }
 
-    suspend fun getGenres(): List<Genre> {
-        val result = remoteDatasource.loadGenres()
+    suspend fun getCredits(movieId: Int): List<Actor> {
+        val result = remoteDatasource.loadCredits(movieId)
         return if (result is Result.Success && result.successed) {
-            result.data.genres.map { Genre(it.id, it.genre) }
+            result.data.cast.map { Actor(it.name, it.profilePath) }
         } else {
             throw Exception("Error loading now upcoming films")
         }
     }
 
-    suspend fun getCredits(movieId: Int): List<Actor> {
-        val result = remoteDatasource.loadCredits(movieId)
+    suspend fun getMovieDetails(movieId: Int): MovieDetails {
+        val result = remoteDatasource.loadMovieDetails(movieId)
         return if (result is Result.Success && result.successed) {
-            result.data.casts.map { Actor(it.name) }
+            MovieDetails(result.data)
         } else {
-            throw Exception("Error loading now upcoming films")
+            throw Exception("Error loading movie details")
         }
     }
 
     companion object {
-        fun getRepository(): MoviesRepository = MoviesRepository(MoviesRemoteDatasource(
-            MoviesInterface.apiClient))
+        fun getRepository(): MoviesRepository = MoviesRepository(
+            MoviesRemoteDatasource(
+                MoviesInterface.apiClient
+            )
+        )
     }
 }

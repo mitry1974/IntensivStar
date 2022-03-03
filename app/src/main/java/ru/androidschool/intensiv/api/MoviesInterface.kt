@@ -15,22 +15,22 @@ import ru.androidschool.intensiv.util.Constants
 
 interface MoviesInterface {
     @GET("movie/now_playing")
-    suspend fun getNowPlaying(): Response<MoviesResponse>
+    suspend fun loadNowPlaying(): Response<MoviesResponse>
 
     @GET("movie/upcoming")
-    suspend fun getUpcoming(): Response<MoviesResponse>
+    suspend fun loadUpcoming(): Response<MoviesResponse>
 
     @GET("movie/popular")
-    suspend fun getPopular(): Response<MoviesResponse>
+    suspend fun loadPopular(): Response<MoviesResponse>
 
     @GET("movie/{movie_id}/credits")
-    suspend fun getMovieCredits(@Path("movieId") movieId: Int): Response<CreditsResponse>
+    suspend fun loadMovieCredits(@Path("movie_id") movieId: Int): Response<CreditsResponse>
 
     @GET("genre/movie/list")
-    suspend fun getGenres(): Response<GenresResponse>
+    suspend fun loadGenres(): Response<GenresResponse>
 
     @GET("movie/{movie_id}")
-    suspend fun getDetails(@Path("movieId") movieId: Int): Response<MovieDetailsResponse>
+    suspend fun loadMovieDetails(@Path("movie_id") movieId: Int): Response<MovieDetailsResponse>
 
     companion object Factory {
         private fun getOkHttpClient(): OkHttpClient {
