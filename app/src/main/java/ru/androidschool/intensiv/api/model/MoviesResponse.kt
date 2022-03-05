@@ -5,22 +5,22 @@ import ru.androidschool.intensiv.util.Constants
 import java.util.*
 
 data class MovieResponse(
-    val id: Int,
+    val id: Int?,
     @SerializedName("title")
     val title: String?,
     @SerializedName("release_date")
-    val releaseDate: Date,
+    val releaseDate: Date?,
     @SerializedName("vote_average")
-    val voteAverage: Double,
+    val voteAverage: Double?,
     @SerializedName("genre_ids")
-    val genreIds: List<Int>,
+    val genreIds: List<Int>?,
 ) {
     @SerializedName("poster_path")
-    val posterPath: String = ""
+    val posterPath: String? = ""
         get() = "${Constants.IMAGE_URL}$field"
 }
 
 data class MoviesResponse(
-    val page: Int,
-    val results: List<MovieResponse>
+    val page: Int?,
+    val results: List<MovieResponse>?
 )

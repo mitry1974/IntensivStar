@@ -7,10 +7,10 @@ data class CreditResponse(
     val name: String
 ) {
     @SerializedName("profile_path")
-    val profilePath: String = ""
+    val profilePath: String? = ""
         get() = "${Constants.IMAGE_URL}$field"
 }
 
 data class CreditsResponse(
-    val cast: List<CreditResponse>
+    val cast: List<CreditResponse>?
 )
