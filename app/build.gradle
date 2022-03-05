@@ -26,8 +26,8 @@ android {
         }
     }
     buildTypes.each {
-        it.buildConfigField 'String', 'SERVER_URL', serverUrl
-        it.buildConfigField 'String', 'IMAGE_URL', imageUrl
+        it.buildConfigField 'String', 'SERVER_URL', "https://api.themoviedb.org/3/"
+        it.buildConfigField 'String', 'IMAGE_URL', "https://image.tmdb.org/t/p/w500"
     }
 
     compileOptions {
