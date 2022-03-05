@@ -46,7 +46,7 @@ interface MoviesInterface {
                 chain.proceed(request)
             }
             val builder = OkHttpClient.Builder().addInterceptor(TokenInterceptor())
-            
+
             if (BuildConfig.DEBUG) {
                 val loggingInterceptor = HttpLoggingInterceptor()
                 loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
