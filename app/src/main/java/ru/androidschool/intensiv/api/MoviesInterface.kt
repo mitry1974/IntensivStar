@@ -1,5 +1,6 @@
 package ru.androidschool.intensiv.api
 
+import android.os.Build
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -7,6 +8,7 @@ import retrofit2.Response
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
+import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.api.model.*
 import ru.androidschool.intensiv.util.Constants
 
@@ -34,7 +36,7 @@ interface MoviesInterface {
 
     companion object Factory {
         private fun getOkHttpClient(): OkHttpClient {
-             val requestInterceptor = Interceptor { chain ->
+            val requestInterceptor = Interceptor { chain ->
                 val original = chain.request()
 
                 val requestBuilder = original.newBuilder()
@@ -43,12 +45,18 @@ interface MoviesInterface {
                 val request = requestBuilder.build()
                 chain.proceed(request)
             }
+            val builder = OkHttpClient.Builder().addInterceptor(TokenInterceptor())
+            
+            if (BuildConfig.DEBUG) {
+                val loggingInterceptor = HttpLoggingInterceptor()
+                loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+                builder.addInterceptor(loggingInterceptor)
+            }
 
-            val loggingInterceptor = HttpLoggingInterceptor()
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-            return OkHttpClient.Builder().addInterceptor(TokenInterceptor())
-                .addInterceptor(loggingInterceptor).build()
+            return builder.addInterceptor(TokenInterceptor())
+                .build()
         }
+
         val apiClient: MoviesInterface by lazy {
             val retrofit = retrofit2.Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
