@@ -11,7 +11,9 @@ import com.xwray.groupie.GroupieViewHolder
 import kotlinx.coroutines.launch
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.entity.Movie
-import ru.androidschool.intensiv.data.repository.movies.MoviesRepository
+import ru.androidschool.intensiv.data.repository.movies.nowPlaying.NowPlayingMoviesListRepository
+import ru.androidschool.intensiv.data.repository.movies.popular.PopularMoviesListRepository
+import ru.androidschool.intensiv.data.repository.movies.upcoming.UpcomingMoviesListRepository
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
 import ru.androidschool.intensiv.ui.afterTextChanged
@@ -21,7 +23,9 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
 
     private var _binding: FeedFragmentBinding? = null
     private var _searchBinding: FeedHeaderBinding? = null
-    private val repository by lazy {  MoviesRepository.getRepository() }
+    private val popularMoviesRepository by lazy {  PopularMoviesListRepository() }
+    private val nowPlayingMoviesRepository by lazy {  NowPlayingMoviesListRepository() }
+    private val upcomingMoviesRepository by lazy {  UpcomingMoviesListRepository() }
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -67,7 +71,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
     }
 
     private fun updateView() {
-        val nowPlayingList = repository.nowPlaying.map {
+        val nowPlayingList = nowPlayingMoviesRepository.itemsList.map {
             MovieItem(it.value) { movie ->
                 openMovieDetails(
                     movie
@@ -77,7 +81,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         adapter.apply { addAll(listOf(MainCardContainer(R.string.recommended, nowPlayingList))) }
 
 
-        val upcomingList = repository.upcoming.map {
+        val upcomingList = upcomingMoviesRepository.itemsList.map {
             MovieItem(it.value) { movie ->
                 openMovieDetails(
                     movie
@@ -86,7 +90,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         }
         adapter.apply { addAll(listOf(MainCardContainer(R.string.upcoming, upcomingList))) }
 
-        val popularList = repository.popular.map {
+        val popularList = popularMoviesRepository.itemsList.map {
             MovieItem(it.value) { movie ->
                 openMovieDetails(
                     movie
@@ -98,9 +102,9 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
 
     private fun initData() {
         viewLifecycleOwner.lifecycleScope.launch {
-            repository.getNowPlaying()
-            repository.getPopular()
-            repository.getUpcoming()
+            popularMoviesRepository.getItemsList()
+            upcomingMoviesRepository.getItemsList()
+            nowPlayingMoviesRepository.getItemsList()
 
             updateView()
         }

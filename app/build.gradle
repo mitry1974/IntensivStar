@@ -18,16 +18,14 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField 'String', 'THE_MOVIE_DATABASE_API', keystoreProperties['THE_MOVIE_DATABASE_API']
+        buildConfigField 'String', 'SERVER_URL', '"https://api.themoviedb.org/3/"'
+        buildConfigField 'String', 'IMAGE_URL', '"https://image.tmdb.org/t/p/w500"'
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-    }
-    buildTypes.each {
-        it.buildConfigField 'String', 'SERVER_URL', "https://api.themoviedb.org/3/"
-        it.buildConfigField 'String', 'IMAGE_URL', "https://image.tmdb.org/t/p/w500"
     }
 
     compileOptions {

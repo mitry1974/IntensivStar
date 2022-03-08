@@ -13,14 +13,14 @@ import kotlinx.coroutines.launch
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.entity.Actor
 import ru.androidschool.intensiv.data.entity.MovieDetails
-import ru.androidschool.intensiv.data.repository.movies.MoviesRepository
+import ru.androidschool.intensiv.data.repository.movies.details.MovieDetailsRepository
 import ru.androidschool.intensiv.databinding.MovieDetailsFragmentBinding
 import ru.androidschool.intensiv.ui.feed.FeedFragment
 
 class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
     private lateinit var binding: MovieDetailsFragmentBinding
 
-    private val repository by lazy { MoviesRepository.getRepository() }
+    private val repository by lazy { MovieDetailsRepository() }
 
     private lateinit var movieDetails: MovieDetails
     private lateinit var actors: List<Actor>
@@ -55,7 +55,7 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
     private fun initData() {
         viewLifecycleOwner.lifecycleScope.launch {
             movieId?.let {
-                movieDetails = repository.getMovieDetails(it)
+                movieDetails = repository.getItemDetails(it)
                 actors = repository.getCredits(it)
             }
             updateView()
@@ -73,7 +73,7 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
                 movieDetailsFilmName.text = md.title
                 movieYear.text = md.year
                 studio.text = md.productionCompanies
-                genre.text = md.genre
+                genre.text = md.genres
                 overview.text = md.overview
                 rating.rating = md.voteAverage / 2
 

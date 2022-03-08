@@ -11,13 +11,13 @@ import com.xwray.groupie.GroupieViewHolder
 import kotlinx.coroutines.launch
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.entity.TvShow
-import ru.androidschool.intensiv.data.repository.movies.MoviesRepository
+import ru.androidschool.intensiv.data.repository.movies.tvShows.TvShowsRepository
 import ru.androidschool.intensiv.databinding.TvShowsFragmentBinding
 
 class TvShowsFragment : Fragment(R.layout.tv_shows_fragment) {
     private lateinit var binding: TvShowsFragmentBinding
 
-    private val repository by lazy { MoviesRepository.getRepository() }
+    private val repository by lazy { TvShowsRepository() }
 
     private lateinit var tvShowsList: List<TvShow>
 

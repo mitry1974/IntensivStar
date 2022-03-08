@@ -1,6 +1,5 @@
 package ru.androidschool.intensiv.api
 
-import android.os.Build
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -12,7 +11,7 @@ import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.api.model.*
 import ru.androidschool.intensiv.util.Constants
 
-interface MoviesInterface {
+interface TMDBInterface {
     @GET("movie/now_playing")
     suspend fun loadNowPlaying(): Response<MoviesResponse>
 
@@ -57,14 +56,14 @@ interface MoviesInterface {
                 .build()
         }
 
-        val apiClient: MoviesInterface by lazy {
+        val apiClient: TMDBInterface by lazy {
             val retrofit = retrofit2.Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(Constants.BASE_URL_RETROFIT_API)
                 .client(getOkHttpClient())
                 .build()
 
-            return@lazy retrofit.create(MoviesInterface::class.java)
+            return@lazy retrofit.create(TMDBInterface::class.java)
         }
     }
 }

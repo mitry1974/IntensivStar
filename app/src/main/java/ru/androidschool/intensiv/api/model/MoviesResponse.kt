@@ -11,7 +11,7 @@ data class MovieResponse(
     @SerializedName("release_date")
     val releaseDate: Date?,
     @SerializedName("vote_average")
-    val voteAverage: Double?,
+    val voteAverage: Float?,
     @SerializedName("genre_ids")
     val genreIds: List<Int>?,
 ) {
