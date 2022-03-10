@@ -7,7 +7,7 @@ import ru.androidschool.intensiv.api.model.GenericResponse
 import ru.androidschool.intensiv.util.Constants
 
 abstract class BaseRemoteDataSource {
-    suspend fun <T> getResult(call: suspend () -> Response<T>): Result<T> {
+    fun <T> getResult(call: () -> Response<T>): Result<T> {
         try {
             val response = call()
 

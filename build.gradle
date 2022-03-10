@@ -51,4 +51,5 @@ ext {
     retrofitLogInterceptorVersion = '4.9.1'
 
     gsonVersion = '2.9.0'
+    rxJavaVersion = '3.0.0'
 }

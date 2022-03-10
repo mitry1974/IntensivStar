@@ -9,7 +9,7 @@ import ru.androidschool.intensiv.data.repository.movies.common.MoviesRemoteDataS
 
 class PopularMoviesRemoteDataSource(private val service: TMDBInterface) : BaseRemoteDataSource(),
     MoviesRemoteDataSourceInterface {
-    override suspend fun loadItemsList(): Result<MoviesResponse> =
+    override fun loadItemsList(): Result<MoviesResponse> =
         getResult {
             service.loadPopular()
         }

@@ -27,7 +27,7 @@ class MovieDetailsRepository() {
     private fun mapCreditsResponse(response: CreditsResponse): List<Actor> =
         response.cast?.map { Actor(it.name, it.profilePath ?: "") } ?: listOf()
 
-    suspend fun getItemDetails(itemId: Int): MovieDetails {
+    fun getItemDetails(itemId: Int): MovieDetails {
         val result = remoteDataSource.loadItemDetails(itemId)
         return if (result is Result.Success && result.successed) {
             mapMovieResponse(result.data)
@@ -37,7 +37,7 @@ class MovieDetailsRepository() {
         }
     }
 
-    suspend fun getCredits(itemId: Int): List<Actor> {
+    fun getCredits(itemId: Int): List<Actor> {
         val result = remoteDataSource.loadCredits(itemId)
         return if (result is Result.Success && result.successed) {
             mapCreditsResponse(result.data)

@@ -1,13 +1,15 @@
 package ru.androidschool.intensiv.data.repository.movies.common
 
+import io.reactivex.rxjava3.core.Observable
 import ru.androidschool.intensiv.api.Result
 import ru.androidschool.intensiv.api.model.MoviesResponse
 import ru.androidschool.intensiv.api.successed
 import ru.androidschool.intensiv.data.entity.Movie
+import java.util.concurrent.Callable
 
 open class BaseMoviesListRepository(private val remoteDataSource: MoviesRemoteDataSourceInterface) :
     ItemListRepositoryInterface<MoviesResponse, Movie> {
-    open lateinit var itemsList: Map<Int, Movie>
+    open var itemsList: Observable<Map<Int, Movie>> = Observable.fromCallable { getItemsList() }
 
 
     override fun mapListResponse(response: MoviesResponse): Map<Int, Movie> =
@@ -27,10 +29,10 @@ open class BaseMoviesListRepository(private val remoteDataSource: MoviesRemoteDa
 
 
 
-    override suspend fun getItemsList() {
+    override fun getItemsList(): Map<Int, Movie> {
         val result = remoteDataSource.loadItemsList()
         return if (result is Result.Success && result.successed) {
-            itemsList = mapListResponse(result.data)
+            mapListResponse(result.data)
         } else {
             throw Exception("Error loading now playing films")
         }

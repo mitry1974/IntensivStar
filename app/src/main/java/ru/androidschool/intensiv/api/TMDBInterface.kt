@@ -13,25 +13,25 @@ import ru.androidschool.intensiv.util.Constants
 
 interface TMDBInterface {
     @GET("movie/now_playing")
-    suspend fun loadNowPlaying(): Response<MoviesResponse>
+    fun loadNowPlaying(): Response<MoviesResponse>
 
     @GET("movie/upcoming")
-    suspend fun loadUpcoming(): Response<MoviesResponse>
+    fun loadUpcoming(): Response<MoviesResponse>
 
     @GET("movie/popular")
-    suspend fun loadPopular(): Response<MoviesResponse>
+    fun loadPopular(): Response<MoviesResponse>
 
     @GET("movie/{movie_id}/credits")
-    suspend fun loadMovieCredits(@Path("movie_id") movieId: Int): Response<CreditsResponse>
+    fun loadMovieCredits(@Path("movie_id") movieId: Int): Response<CreditsResponse>
 
     @GET("genre/movie/list")
-    suspend fun loadGenres(): Response<GenresResponse>
+    fun loadGenres(): Response<GenresResponse>
 
     @GET("movie/{movie_id}")
-    suspend fun loadMovieDetails(@Path("movie_id") movieId: Int): Response<MovieDetailsResponse>
+    fun loadMovieDetails(@Path("movie_id") movieId: Int): Response<MovieDetailsResponse>
 
     @GET("tv/popular")
-    suspend fun loadTvShows(): Response<TvShowsListResponse>
+    fun loadTvShows(): Response<TvShowsListResponse>
 
     companion object Factory {
         private fun getOkHttpClient(): OkHttpClient {

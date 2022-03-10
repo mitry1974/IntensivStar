@@ -7,12 +7,12 @@ import ru.androidschool.intensiv.api.model.CreditsResponse
 import ru.androidschool.intensiv.api.model.MovieDetailsResponse
 
 class MovieDetailsRemoteDataSource(private val service: TMDBInterface) : BaseRemoteDataSource() {
-    suspend fun loadItemDetails(id: Int): Result<MovieDetailsResponse> =
+    fun loadItemDetails(id: Int): Result<MovieDetailsResponse> =
         getResult {
             service.loadMovieDetails(id)
         }
 
-    suspend fun loadCredits(movieId: Int): Result<CreditsResponse> =
+    fun loadCredits(movieId: Int): Result<CreditsResponse> =
         getResult {
             service.loadMovieCredits(movieId)
         }

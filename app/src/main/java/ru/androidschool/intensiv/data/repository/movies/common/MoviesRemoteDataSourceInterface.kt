@@ -5,5 +5,5 @@ import ru.androidschool.intensiv.api.model.MovieDetailsResponse
 import ru.androidschool.intensiv.api.model.MoviesResponse
 
 interface MoviesRemoteDataSourceInterface {
-    suspend fun loadItemsList(): Result<MoviesResponse>
+    fun loadItemsList(): Result<MoviesResponse>
 }
