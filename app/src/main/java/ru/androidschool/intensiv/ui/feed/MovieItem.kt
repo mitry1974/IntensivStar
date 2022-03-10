@@ -4,7 +4,7 @@ import android.view.View
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.viewbinding.BindableItem
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.Movie
+import ru.androidschool.intensiv.data.entity.Movie
 import ru.androidschool.intensiv.databinding.ItemWithTextBinding
 
 class MovieItem(
@@ -23,7 +23,7 @@ class MovieItem(
 
         // TODO Получать из модели
         Picasso.get()
-            .load("https://m.media-amazon.com/images/M/MV5BYTk3MDljOWQtNGI2My00OTEzLTlhYjQtOTQ4ODM2MzUwY2IwXkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_.jpg")
+            .load(content.posterPath)
             .into(view.imagePreview)
     }
 

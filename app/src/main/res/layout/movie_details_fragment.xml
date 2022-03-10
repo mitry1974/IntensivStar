@@ -88,6 +88,14 @@
                 app:layout_constraintEnd_toEndOf="@id/content_end"
                 app:layout_constraintTop_toTopOf="@id/film_details_watch"
                 tools:rating="3" />
+            <TextView
+                android:id="@+id/overview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="The movie overview"
+                style="@style/AppTheme.Text.Light.Normal"
+                app:layout_constraintTop_toBottomOf="@id/film_details_watch"
+                app:layout_constraintStart_toStartOf="@id/content_start"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/actors"
@@ -98,7 +106,7 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="@id/content_end"
                 app:layout_constraintStart_toStartOf="@id/content_start"
-                app:layout_constraintTop_toBottomOf="@id/film_details_watch"
+                app:layout_constraintTop_toBottomOf="@id/overview"
                 tools:listitem="@layout/item_actor" />
 
             <TextView
@@ -106,6 +114,7 @@
                 style="@style/AppTheme.Text.Light.Normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:text="@string/studio_label_text"
                 app:layout_constraintStart_toStartOf="@id/content_start"
                 app:layout_constraintTop_toBottomOf="@+id/actors" />
