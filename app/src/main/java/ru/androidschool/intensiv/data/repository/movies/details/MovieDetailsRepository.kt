@@ -15,17 +15,17 @@ class MovieDetailsRepository() {
     private fun mapMovieResponse(response: MovieDetailsResponse): MovieDetails =
         MovieDetails(
             id = response.id ?: 0,
-            title = response.title ?: "",
+            title = response.title.orEmpty(),
             voteAverage = response.voteAverage ?: 0F,
-            productionCompanies = response.productionCompanies?.joinToString(", ") ?: "",
-            genres = response.genres?.joinToString(", ") ?: "",
+            productionCompanies = response.productionCompanies?.joinToString(", ").orEmpty(),
+            genres = response.genres?.joinToString(", ").orEmpty(),
             overview = response.overview ?: "",
-            year = response.releaseDate?.getYear() ?: "",
-            posterPath = response.posterPath ?: ""
+            year = response.releaseDate?.getYear().orEmpty(),
+            posterPath = response.posterPath.orEmpty()
         )
 
     private fun mapCreditsResponse(response: CreditsResponse): List<Actor> =
-        response.cast?.map { Actor(it.name, it.profilePath ?: "") } ?: listOf()
+        response.cast?.map { Actor(it.name, it.profilePath ?: "") } ?: emptyList()
 
     fun getItemDetails(itemId: Int): MovieDetails {
         val result = remoteDataSource.loadItemDetails(itemId)
