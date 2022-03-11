@@ -1,14 +1,16 @@
 package ru.androidschool.intensiv.ui.feed
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import kotlinx.coroutines.launch
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.entity.Movie
 import ru.androidschool.intensiv.data.repository.movies.nowPlaying.NowPlayingMoviesListRepository
@@ -23,6 +25,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
 
     private var _binding: FeedFragmentBinding? = null
     private var _searchBinding: FeedHeaderBinding? = null
+
     private val popularMoviesRepository by lazy {  PopularMoviesListRepository() }
     private val nowPlayingMoviesRepository by lazy {  NowPlayingMoviesListRepository() }
     private val upcomingMoviesRepository by lazy {  UpcomingMoviesListRepository() }
@@ -67,47 +70,42 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         }
 
         binding.moviesRecyclerView.adapter = adapter
-        initData()
+        updateView()
+    }
+
+    @SuppressLint("CheckResult")
+    private fun applyMovieList(containerName: Int, movieList: Observable<List<Movie>>) {
+        movieList.map {
+            it
+                .map { mv ->
+                MovieItem(mv) { movie ->
+                    openMovieDetails(
+                        movie
+                    )
+                }
+            }
+        }
+            .doOnError {
+                println(it)
+            }
+            .subscribe { list ->
+                adapter.apply {
+                    addAll(
+                        listOf(
+                            MainCardContainer(
+                                containerName,
+                                list
+                            )
+                        )
+                    )
+                }
+            }
     }
 
     private fun updateView() {
-        val nowPlayingList = nowPlayingMoviesRepository.itemsList.map {
-            MovieItem(it.value) { movie ->
-                openMovieDetails(
-                    movie
-                )
-            }
-        }
-        adapter.apply { addAll(listOf(MainCardContainer(R.string.recommended, nowPlayingList))) }
-
-
-        val upcomingList = upcomingMoviesRepository.itemsList.map {
-            MovieItem(it.value) { movie ->
-                openMovieDetails(
-                    movie
-                )
-            }
-        }
-        adapter.apply { addAll(listOf(MainCardContainer(R.string.upcoming, upcomingList))) }
-
-        val popularList = popularMoviesRepository.itemsList.map {
-            MovieItem(it.value) { movie ->
-                openMovieDetails(
-                    movie
-                )
-            }
-        }
-        adapter.apply { listOf(MainCardContainer(R.string.popular, popularList)) }
-    }
-
-    private fun initData() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            popularMoviesRepository.getItemsList()
-            upcomingMoviesRepository.getItemsList()
-            nowPlayingMoviesRepository.getItemsList()
-
-            updateView()
-        }
+        applyMovieList(R.string.recommended, nowPlayingMoviesRepository.getItemsList())
+        applyMovieList(R.string.upcoming, upcomingMoviesRepository.getItemsList())
+        applyMovieList(R.string.popular, popularMoviesRepository.getItemsList())
     }
 
     private fun openMovieDetails(movie: Movie) {

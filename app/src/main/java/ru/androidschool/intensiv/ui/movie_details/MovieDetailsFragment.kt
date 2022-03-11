@@ -1,18 +1,17 @@
 package ru.androidschool.intensiv.ui.movie_details
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import kotlinx.coroutines.launch
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.entity.Actor
-import ru.androidschool.intensiv.data.entity.MovieDetails
 import ru.androidschool.intensiv.data.repository.movies.details.MovieDetailsRepository
 import ru.androidschool.intensiv.databinding.MovieDetailsFragmentBinding
 import ru.androidschool.intensiv.ui.feed.FeedFragment
@@ -21,11 +20,6 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
     private lateinit var binding: MovieDetailsFragmentBinding
 
     private val repository by lazy { MovieDetailsRepository() }
-
-    private lateinit var movieDetails: MovieDetails
-    private lateinit var actors: List<Actor>
-
-
 
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
@@ -49,39 +43,38 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
 
         binding.actors.adapter = adapter
 
-        initData()
+        updateView()
     }
 
-    private fun initData() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            movieId?.let {
-                movieDetails = repository.getItemDetails(it)
-                actors = repository.getCredits(it)
-            }
-            updateView()
-        }
-    }
-
+    @SuppressLint("CheckResult")
     private fun updateView() {
+        movieId?.let {
+            repository.getItemDetails(it)
+                .doOnError { e ->
+                    println(e)
+                }
+                .subscribe { md ->
+                    binding.apply {
+                        movieDetailsFilmName.text = md.title
+                        movieYear.text = md.year
+                        studio.text = md.productionCompanies
+                        genre.text = md.genres
+                        overview.text = md.overview
+                        rating.rating = md.voteAverage / 2
 
-
-        movieDetails?.let { md ->
-            val actorsItems = actors.map { actor -> ActorItem(actor) {} }
-            adapter.apply { addAll(actorsItems) }
-
-            binding.apply {
-                movieDetailsFilmName.text = md.title
-                movieYear.text = md.year
-                studio.text = md.productionCompanies
-                genre.text = md.genres
-                overview.text = md.overview
-                rating.rating = md.voteAverage / 2
-
-                Picasso.get()
-                    .load(movieDetails.posterPath)
-                    .into(image)
+                        Picasso.get()
+                            .load(md.posterPath)
+                            .into(image)
+                    }
+                }
+            repository.getCredits(it)
+                .doOnError { e ->
+                    println(e)
+                }
+                .subscribe { actorsList ->
+                val actorsItems = actorsList.map { actor -> ActorItem(actor) {} }
+                adapter.apply { addAll(actorsItems) }
             }
-
         }
     }
 }

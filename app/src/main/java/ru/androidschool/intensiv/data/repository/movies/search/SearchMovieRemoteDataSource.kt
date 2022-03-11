@@ -1,17 +1,15 @@
-package ru.androidschool.intensiv.data.repository.movies.nowPlaying
+package ru.androidschool.intensiv.data.repository.movies.search
 
 import io.reactivex.Observable
 import ru.androidschool.intensiv.api.BaseRemoteDataSource
 import ru.androidschool.intensiv.api.Result
 import ru.androidschool.intensiv.api.TMDBInterface
-
 import ru.androidschool.intensiv.api.model.MoviesResponse
 import ru.androidschool.intensiv.data.repository.movies.common.MoviesRemoteDataSourceInterface
 
-class NowPlayingMoviesRemoteDataSource(private val service: TMDBInterface) : BaseRemoteDataSource(),
-    MoviesRemoteDataSourceInterface {
-    override fun loadItemsList(): Observable<Result<MoviesResponse>> =
+class SearchMovieRemoteDataSource(private val service: TMDBInterface) : BaseRemoteDataSource() {
+    fun searchMovies(query: String): Observable<Result<MoviesResponse>> =
         getResult {
-            service.loadNowPlaying()
+            service.searchMovie(query)
         }
 }

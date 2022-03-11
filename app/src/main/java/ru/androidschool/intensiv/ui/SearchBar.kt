@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import androidx.core.view.isVisible
+import io.reactivex.Observable
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.databinding.SearchToolbarBinding
 
@@ -32,6 +33,15 @@ class SearchBar @JvmOverloads constructor(
 
     fun setText(text: String?) {
         binding.searchEditText.setText(text)
+    }
+
+    fun setupObservation(): Observable<String> {
+        return Observable.create { emitter ->
+            binding.searchEditText.afterTextChanged { text ->
+                emitter.onNext(text.toString())
+            }
+        }
+
     }
 
     fun clear() {
