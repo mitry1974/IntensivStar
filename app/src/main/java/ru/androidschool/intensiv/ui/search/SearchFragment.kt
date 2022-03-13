@@ -67,14 +67,10 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         searchBinding.searchToolbar.setText(searchTerm)
 
         searchBinding.searchToolbar.setupObservation()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
             .doOnError {
                 println(it)
             }
-            .debounce(500, TimeUnit.MILLISECONDS)
-            .map { it.trim() }
-            .filter { it.length > 3 }
+
             .subscribe { query ->
                 applyMovieList(
                     R.string.found,
@@ -89,6 +85,8 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             .doOnError {
                 println(it)
             }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe { list ->
                 adapter.clear()
                 adapter.apply {

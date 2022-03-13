@@ -7,8 +7,12 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.databinding.SearchToolbarBinding
+import ru.androidschool.intensiv.util.Constants.MIN_SEARCH_LENGTH
+import java.util.concurrent.TimeUnit
 
 class SearchBar @JvmOverloads constructor(
     context: Context,
@@ -36,12 +40,15 @@ class SearchBar @JvmOverloads constructor(
     }
 
     fun setupObservation(): Observable<String> {
-        return Observable.create { emitter ->
+        val observable: Observable<String> = Observable.create { emitter ->
             binding.searchEditText.afterTextChanged { text ->
                 emitter.onNext(text.toString())
             }
         }
-
+        return observable
+            .debounce(500, TimeUnit.MILLISECONDS)
+            .map { it.trim() }
+            .filter { it.length > MIN_SEARCH_LENGTH }
     }
 
     fun clear() {
