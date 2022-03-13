@@ -78,16 +78,18 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         movieList.map {
             it
                 .map { mv ->
-                MovieItem(mv) { movie ->
-                    openMovieDetails(
-                        movie
-                    )
+                    MovieItem(mv) { movie ->
+                        openMovieDetails(
+                            movie
+                        )
+                    }
                 }
-            }
         }
             .doOnError {
                 println(it)
             }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe { list ->
                 adapter.apply {
                     addAll(

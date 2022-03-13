@@ -22,8 +22,7 @@ class MovieDetailsRepository() {
                 } else {
                     throw Exception("Error loading movie details")
                 }
-            }.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+            }
 
     fun getCredits(itemId: Int): Observable<List<Actor>> =
         remoteDataSource.loadCredits(itemId).map { result ->
@@ -32,6 +31,5 @@ class MovieDetailsRepository() {
             } else {
                 throw Exception("Error loading movie credits")
             }
-        }.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        }
 }

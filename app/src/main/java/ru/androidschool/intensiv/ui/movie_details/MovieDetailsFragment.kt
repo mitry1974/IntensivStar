@@ -53,6 +53,8 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
                 .doOnError { e ->
                     println(e)
                 }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { md ->
                     binding.apply {
                         movieDetailsFilmName.text = md.title
@@ -71,6 +73,8 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
                 .doOnError { e ->
                     println(e)
                 }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { actorsList ->
                 val actorsItems = actorsList.map { actor -> ActorItem(actor) {} }
                 adapter.apply { addAll(actorsItems) }

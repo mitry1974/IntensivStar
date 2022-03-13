@@ -19,6 +19,5 @@ open class BaseMoviesListRepository(private val remoteDataSource: MoviesRemoteDa
                 } else {
                     throw Exception("Error loading now playing films")
                 }
-            }.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+            }
 }

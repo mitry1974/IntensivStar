@@ -5,5 +5,5 @@ import ru.androidschool.intensiv.data.entity.Actor
 
 object ActorMapper : VOMapper<CreditResponse, Actor> {
     override fun toVO(dto: CreditResponse): Actor =
-        Actor(dto.name, dto.profilePath ?: "")
+        Actor(dto.name, dto.profilePath.orEmpty())
 }
