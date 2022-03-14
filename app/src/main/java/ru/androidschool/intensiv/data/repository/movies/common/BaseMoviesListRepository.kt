@@ -1,8 +1,6 @@
 package ru.androidschool.intensiv.data.repository.movies.common
 
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.api.Result
 import ru.androidschool.intensiv.api.model.MoviesResponse
 import ru.androidschool.intensiv.api.successed
@@ -15,9 +13,10 @@ open class BaseMoviesListRepository(private val remoteDataSource: MoviesRemoteDa
         remoteDataSource.loadItemsList()
             .map { result ->
                 if (result is Result.Success && result.successed) {
-                    MovieMapper.toVO(result.data.results?.filter { it.id != 0 } ?: emptyList())
+                    result.data.results?.filter { it.id != 0 }?.map { MovieMapper.toVO(it) }
                 } else {
                     throw Exception("Error loading now playing films")
                 }
             }
 }
+

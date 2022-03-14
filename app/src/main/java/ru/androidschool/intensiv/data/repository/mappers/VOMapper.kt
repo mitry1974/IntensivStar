@@ -1,7 +1,7 @@
 package ru.androidschool.intensiv.data.repository.mappers
 
-interface VOMapper<P, Q> {
-    fun toVO(dto: P): Q
-    fun toVO(list: Collection<P>): List<Q> =
+interface VOMapper<DTO, VO> {
+    fun toVO(dto: DTO): VO
+    fun toVO(list: Collection<DTO>): List<VO> =
         list.map { toVO(it) }
 }

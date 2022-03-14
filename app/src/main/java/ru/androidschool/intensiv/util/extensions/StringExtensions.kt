@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 fun String.getYear (): String {
-   val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(this)
-   return SimpleDateFormat("yyy", Locale.getDefault()).format(date)
+   if (this.isBlank()) return ""
+   val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(this)
+   return SimpleDateFormat("yyy", Locale.getDefault()).format(dateFormat)
 }

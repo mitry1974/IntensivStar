@@ -8,8 +8,6 @@ data class MovieResponse(
     val id: Int?,
     @SerializedName("title")
     val title: String?,
-    @SerializedName("release_date")
-    val releaseDate: Date?,
     @SerializedName("vote_average")
     val voteAverage: Float?,
     @SerializedName("genre_ids")
