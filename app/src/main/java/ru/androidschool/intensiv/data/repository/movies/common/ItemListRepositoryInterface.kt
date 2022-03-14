@@ -1,6 +1,7 @@
 package ru.androidschool.intensiv.data.repository.movies.common
 
+import io.reactivex.Observable
+
 interface ItemListRepositoryInterface<P, Q> {
-    fun mapListResponse(response: P): Map<Int, Q>
-    suspend fun getItemsList()
+    fun getItemsList(): Observable<List<Q>>
 }

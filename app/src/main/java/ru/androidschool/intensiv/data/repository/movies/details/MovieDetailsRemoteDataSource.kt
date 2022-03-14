@@ -1,5 +1,6 @@
 package ru.androidschool.intensiv.data.repository.movies.details
 
+import io.reactivex.Observable
 import ru.androidschool.intensiv.api.BaseRemoteDataSource
 import ru.androidschool.intensiv.api.Result
 import ru.androidschool.intensiv.api.TMDBInterface
@@ -7,12 +8,12 @@ import ru.androidschool.intensiv.api.model.CreditsResponse
 import ru.androidschool.intensiv.api.model.MovieDetailsResponse
 
 class MovieDetailsRemoteDataSource(private val service: TMDBInterface) : BaseRemoteDataSource() {
-    suspend fun loadItemDetails(id: Int): Result<MovieDetailsResponse> =
+    fun loadItemDetails(id: Int): Observable<Result<MovieDetailsResponse>> =
         getResult {
             service.loadMovieDetails(id)
         }
 
-    suspend fun loadCredits(movieId: Int): Result<CreditsResponse> =
+    fun loadCredits(movieId: Int): Observable<Result<CreditsResponse>> =
         getResult {
             service.loadMovieCredits(movieId)
         }

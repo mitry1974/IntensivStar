@@ -1,37 +1,46 @@
 package ru.androidschool.intensiv.api
 
+import io.reactivex.Observable
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 import ru.androidschool.intensiv.BuildConfig
 import ru.androidschool.intensiv.api.model.*
 import ru.androidschool.intensiv.util.Constants
 
 interface TMDBInterface {
     @GET("movie/now_playing")
-    suspend fun loadNowPlaying(): Response<MoviesResponse>
+    fun loadNowPlaying(): Observable<Response<MoviesResponse>>
 
     @GET("movie/upcoming")
-    suspend fun loadUpcoming(): Response<MoviesResponse>
+    fun loadUpcoming(): Observable<Response<MoviesResponse>>
 
     @GET("movie/popular")
-    suspend fun loadPopular(): Response<MoviesResponse>
+    fun loadPopular(): Observable<Response<MoviesResponse>>
 
     @GET("movie/{movie_id}/credits")
-    suspend fun loadMovieCredits(@Path("movie_id") movieId: Int): Response<CreditsResponse>
+    fun loadMovieCredits(@Path("movie_id") movieId: Int): Observable<Response<CreditsResponse>>
 
     @GET("genre/movie/list")
-    suspend fun loadGenres(): Response<GenresResponse>
+    fun loadGenres(): Observable<Response<GenresResponse>>
 
     @GET("movie/{movie_id}")
-    suspend fun loadMovieDetails(@Path("movie_id") movieId: Int): Response<MovieDetailsResponse>
+    fun loadMovieDetails(@Path("movie_id") movieId: Int): Observable<Response<MovieDetailsResponse>>
 
     @GET("tv/popular")
-    suspend fun loadTvShows(): Response<TvShowsListResponse>
+    fun loadTvShows(): Observable<Response<TvShowsListResponse>>
+
+    @GET("search/movie")
+    fun searchMovie(
+        @Query("query") query: String
+    ): Observable<Response<MoviesResponse>>
+
 
     companion object Factory {
         private fun getOkHttpClient(): OkHttpClient {
@@ -60,6 +69,7 @@ interface TMDBInterface {
             val retrofit = retrofit2.Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(Constants.BASE_URL_RETROFIT_API)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(getOkHttpClient())
                 .build()
 
