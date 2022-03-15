@@ -13,9 +13,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.entity.Movie
-import ru.androidschool.intensiv.data.repository.movies.nowPlaying.NowPlayingMoviesListRepository
-import ru.androidschool.intensiv.data.repository.movies.popular.PopularMoviesListRepository
-import ru.androidschool.intensiv.data.repository.movies.upcoming.UpcomingMoviesListRepository
+import ru.androidschool.intensiv.data.interactor.MoviesInteractor
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
 import ru.androidschool.intensiv.ui.afterTextChanged
@@ -26,9 +24,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
     private var _binding: FeedFragmentBinding? = null
     private var _searchBinding: FeedHeaderBinding? = null
 
-    private val popularMoviesRepository by lazy {  PopularMoviesListRepository() }
-    private val nowPlayingMoviesRepository by lazy {  NowPlayingMoviesListRepository() }
-    private val upcomingMoviesRepository by lazy {  UpcomingMoviesListRepository() }
+    private val moviesInteractor by lazy { MoviesInteractor() }
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -73,41 +69,38 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         updateView()
     }
 
-    @SuppressLint("CheckResult")
-    private fun applyMovieList(containerName: Int, movieList: Observable<List<Movie>>) {
-        movieList.map {
-            it
-                .map { mv ->
-                    MovieItem(mv) { movie ->
-                        openMovieDetails(
-                            movie
-                        )
-                    }
-                }
+    private fun applyMovieList(containerName: Int, movieList: List<Movie>) {
+        val movieItemList = movieList.map { mv ->
+            MovieItem(mv) { movie -> openMovieDetails(movie) }
         }
-            .doOnError {
-                println(it)
-            }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { list ->
-                adapter.apply {
-                    addAll(
-                        listOf(
-                            MainCardContainer(
-                                containerName,
-                                list
-                            )
-                        )
-                    )
-                }
-            }
+        adapter.apply {
+            addAll(
+                listOf(
+                    MainCardContainer(containerName, movieItemList)
+                )
+            )
+        }
     }
 
+    @SuppressLint("CheckResult")
     private fun updateView() {
-        applyMovieList(R.string.recommended, nowPlayingMoviesRepository.getItemsList())
-        applyMovieList(R.string.upcoming, upcomingMoviesRepository.getItemsList())
-        applyMovieList(R.string.popular, popularMoviesRepository.getItemsList())
+        moviesInteractor.getMoviesList()//.map { it.map { mv ->  } }
+            .doOnError { println(it) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { lists ->
+                lists[R.string.recommended]?.let {
+                    applyMovieList(R.string.recommended, it)
+                }
+
+                lists[R.string.popular]?.let {
+                    applyMovieList(R.string.popular, it)
+                }
+
+                lists[R.string.upcoming]?.let {
+                    applyMovieList(R.string.upcoming, it)
+                }
+            }
     }
 
     private fun openMovieDetails(movie: Movie) {
