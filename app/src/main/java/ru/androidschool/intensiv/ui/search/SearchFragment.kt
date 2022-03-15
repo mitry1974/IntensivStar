@@ -70,7 +70,8 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             .doOnError {
                 println(it)
             }
-
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe { query ->
                 applyMovieList(
                     R.string.found,
@@ -87,6 +88,8 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { binding.searchProgressBar.visibility = View.VISIBLE }
+            .doFinally { binding.searchProgressBar.visibility = View.GONE }
             .subscribe { list ->
                 adapter.clear()
                 adapter.apply {
