@@ -8,7 +8,7 @@ import ru.androidschool.intensiv.api.model.TvShowsListResponse
 
 class TvShowsRemoteDataSource(private val service: TMDBInterface) :
     BaseRemoteDataSource() {
-    suspend fun loadItemsList(): Observable<Result<TvShowsListResponse>> =
+    fun loadItemsList(): Observable<Result<TvShowsListResponse>> =
         getResult {
             service.loadTvShows()
         }
