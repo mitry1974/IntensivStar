@@ -1,7 +1,7 @@
-package ru.androidschool.intensiv.data.interactor
+package ru.androidschool.intensiv.data.repository.interactor
 import io.reactivex.Observable
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.entity.Movie
+import ru.androidschool.intensiv.data.local.database.entity.Movie
 import ru.androidschool.intensiv.data.repository.movies.nowPlaying.NowPlayingMoviesListRepository
 import ru.androidschool.intensiv.data.repository.movies.popular.PopularMoviesListRepository
 import ru.androidschool.intensiv.data.repository.movies.upcoming.UpcomingMoviesListRepository

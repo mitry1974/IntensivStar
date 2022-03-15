@@ -4,7 +4,7 @@
 //import ru.androidschool.intensiv.api.Result
 //import ru.androidschool.intensiv.api.model.TvShowsListResponse
 //import ru.androidschool.intensiv.api.successed
-//import ru.androidschool.intensiv.data.entity.*
+//import ru.androidschool.intensiv.data.local.database.entity.*
 //
 //class MoviesRepository private constructor(private val remoteDatasource: MoviesRemoteDatasource) {
 //    lateinit var nowPlaying: Map<Int, Movie>

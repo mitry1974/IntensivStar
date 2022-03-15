@@ -1,7 +1,7 @@
 package ru.androidschool.intensiv.data.repository.mappers
 
 import ru.androidschool.intensiv.api.model.MovieDetailsResponse
-import ru.androidschool.intensiv.data.entity.MovieDetails
+import ru.androidschool.intensiv.data.local.database.entity.MovieDetails
 import ru.androidschool.intensiv.util.extensions.getYear
 
 object MovieDetailsMapper : VOMapper<MovieDetailsResponse, MovieDetails> {

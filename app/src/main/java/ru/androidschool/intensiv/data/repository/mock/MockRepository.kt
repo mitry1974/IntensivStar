@@ -1,9 +1,5 @@
 package ru.androidschool.intensiv.data.repository.mock
 
-import ru.androidschool.intensiv.data.entity.Actor
-import ru.androidschool.intensiv.data.entity.Movie
-import kotlin.random.Random
-
 object MockRepository {
 //    private val movies: Map<String, Movie> = mapOf(
 //        Pair(

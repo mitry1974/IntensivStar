@@ -4,9 +4,8 @@ import io.reactivex.Observable
 import ru.androidschool.intensiv.api.Result
 import ru.androidschool.intensiv.api.TMDBInterface
 import ru.androidschool.intensiv.api.successed
-import ru.androidschool.intensiv.data.entity.TvShow
+import ru.androidschool.intensiv.data.local.database.entity.TvShow
 import ru.androidschool.intensiv.data.repository.mappers.TvShowMapper
-import java.util.*
 
 class TvShowsRepository() {
     private val remoteDataSource = TvShowsRemoteDataSource(TMDBInterface.apiClient)

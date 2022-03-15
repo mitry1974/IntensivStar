@@ -1,7 +1,7 @@
 package ru.androidschool.intensiv.data.repository.mappers
 
 import ru.androidschool.intensiv.api.model.TvShowResponse
-import ru.androidschool.intensiv.data.entity.TvShow
+import ru.androidschool.intensiv.data.local.database.entity.TvShow
 
 object TvShowMapper: VOMapper<TvShowResponse, TvShow> {
     override fun toVO(dto: TvShowResponse): TvShow =

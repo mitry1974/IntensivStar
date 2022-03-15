@@ -1,13 +1,11 @@
 package ru.androidschool.intensiv.data.repository.movies.details
 
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.api.Result
 import ru.androidschool.intensiv.api.TMDBInterface
 import ru.androidschool.intensiv.api.successed
-import ru.androidschool.intensiv.data.entity.Actor
-import ru.androidschool.intensiv.data.entity.MovieDetails
+import ru.androidschool.intensiv.data.local.database.entity.Actor
+import ru.androidschool.intensiv.data.local.database.entity.MovieDetails
 import ru.androidschool.intensiv.data.repository.mappers.ActorMapper
 import ru.androidschool.intensiv.data.repository.mappers.MovieDetailsMapper
 

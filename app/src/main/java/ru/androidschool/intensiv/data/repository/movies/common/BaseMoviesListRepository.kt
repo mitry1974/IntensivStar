@@ -4,7 +4,7 @@ import io.reactivex.Observable
 import ru.androidschool.intensiv.api.Result
 import ru.androidschool.intensiv.api.model.MoviesResponse
 import ru.androidschool.intensiv.api.successed
-import ru.androidschool.intensiv.data.entity.Movie
+import ru.androidschool.intensiv.data.local.database.entity.Movie
 import ru.androidschool.intensiv.data.repository.mappers.MovieMapper
 
 open class BaseMoviesListRepository(private val remoteDataSource: MoviesRemoteDataSourceInterface) :

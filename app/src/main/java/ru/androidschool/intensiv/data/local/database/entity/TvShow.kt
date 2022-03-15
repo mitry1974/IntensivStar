@@ -1,6 +1,4 @@
-package ru.androidschool.intensiv.data.entity
-
-import ru.androidschool.intensiv.api.model.TvShowResponse
+package ru.androidschool.intensiv.data.local.database.entity
 
 data class TvShow(
     val id: Int,

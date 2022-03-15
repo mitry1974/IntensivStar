@@ -1,7 +1,7 @@
 package ru.androidschool.intensiv.data.repository.mappers
 
 import ru.androidschool.intensiv.api.model.MovieResponse
-import ru.androidschool.intensiv.data.entity.Movie
+import ru.androidschool.intensiv.data.local.database.entity.Movie
 
 object MovieMapper : VOMapper<MovieResponse, Movie> {
     override fun toVO(dto: MovieResponse): Movie =

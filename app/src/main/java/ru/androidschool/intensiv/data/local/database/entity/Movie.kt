@@ -1,7 +1,4 @@
-package ru.androidschool.intensiv.data.entity
-
-import ru.androidschool.intensiv.api.model.MovieResponse
-import java.util.*
+package ru.androidschool.intensiv.data.local.database.entity
 
 class Movie(
     val id: Int,

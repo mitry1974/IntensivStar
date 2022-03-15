@@ -6,7 +6,7 @@ import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.api.Result
 import ru.androidschool.intensiv.api.TMDBInterface
 import ru.androidschool.intensiv.api.successed
-import ru.androidschool.intensiv.data.entity.Movie
+import ru.androidschool.intensiv.data.local.database.entity.Movie
 import ru.androidschool.intensiv.data.repository.mappers.MovieMapper
 
 class SearchMoviesListRepository {

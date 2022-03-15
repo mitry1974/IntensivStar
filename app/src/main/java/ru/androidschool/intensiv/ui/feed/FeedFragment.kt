@@ -3,7 +3,6 @@ package ru.androidschool.intensiv.ui.feed
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
-import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
@@ -12,8 +11,8 @@ import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.entity.Movie
-import ru.androidschool.intensiv.data.interactor.MoviesInteractor
+import ru.androidschool.intensiv.data.local.database.entity.Movie
+import ru.androidschool.intensiv.data.repository.interactor.MoviesInteractor
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
 import ru.androidschool.intensiv.ui.afterTextChanged
