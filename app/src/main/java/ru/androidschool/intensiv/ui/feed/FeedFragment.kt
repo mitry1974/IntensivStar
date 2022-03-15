@@ -3,12 +3,12 @@ package ru.androidschool.intensiv.ui.feed
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
+import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.R
@@ -88,6 +88,8 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
             .doOnError { println(it) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { binding.feedProgressBar.visibility = View.VISIBLE }
+            .doFinally { binding.feedProgressBar.visibility = View.GONE }
             .subscribe { lists ->
                 lists[R.string.recommended]?.let {
                     applyMovieList(R.string.recommended, it)
