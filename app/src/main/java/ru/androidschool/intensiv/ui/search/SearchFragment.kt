@@ -66,18 +66,12 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         val searchTerm = requireArguments().getString(KEY_SEARCH)
         searchBinding.searchToolbar.setText(searchTerm)
 
-        searchBinding.searchToolbar.setupObservation()
-            .doOnError {
-                println(it)
-            }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { query ->
-                applyMovieList(
-                    R.string.found,
-                    searchRepository.searchMovies(query)
-                )
-            }
+        searchBinding.searchToolbar.setupObservation { query ->
+            applyMovieList(
+                R.string.found,
+                searchRepository.searchMovies(query)
+            )
+        }
     }
 
     @SuppressLint("CheckResult")
