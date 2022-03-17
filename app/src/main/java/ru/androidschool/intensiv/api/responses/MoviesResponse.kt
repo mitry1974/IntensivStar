@@ -1,8 +1,7 @@
-package ru.androidschool.intensiv.api.model
+package ru.androidschool.intensiv.api.responses
 
 import com.google.gson.annotations.SerializedName
 import ru.androidschool.intensiv.util.Constants
-import java.util.*
 
 data class MovieResponse(
     val id: Int?,

@@ -1,10 +1,10 @@
 package ru.androidschool.intensiv.data.repository.mappers
 
-import ru.androidschool.intensiv.api.model.MovieDetailsResponse
-import ru.androidschool.intensiv.data.local.database.entity.MovieDetails
+import ru.androidschool.intensiv.api.responses.MovieDetailsResponse
+import ru.androidschool.intensiv.models.MovieDetails
 import ru.androidschool.intensiv.util.extensions.getYear
 
-object MovieDetailsMapper : VOMapper<MovieDetailsResponse, MovieDetails> {
+object RersponseToMovieDetailsMapper : VOMapper<MovieDetailsResponse, MovieDetails> {
     override fun toVO(dto: MovieDetailsResponse): MovieDetails =
         MovieDetails(
             id = dto.id ?: 0,

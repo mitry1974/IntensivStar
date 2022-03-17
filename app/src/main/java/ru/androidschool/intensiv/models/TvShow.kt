@@ -1,4 +1,4 @@
-package ru.androidschool.intensiv.data.local.database.entity
+package ru.androidschool.intensiv.models
 
 data class TvShow(
     val id: Int,

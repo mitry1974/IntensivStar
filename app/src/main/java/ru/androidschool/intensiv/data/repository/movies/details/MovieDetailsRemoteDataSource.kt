@@ -4,8 +4,8 @@ import io.reactivex.Observable
 import ru.androidschool.intensiv.api.BaseRemoteDataSource
 import ru.androidschool.intensiv.api.Result
 import ru.androidschool.intensiv.api.TMDBInterface
-import ru.androidschool.intensiv.api.model.CreditsResponse
-import ru.androidschool.intensiv.api.model.MovieDetailsResponse
+import ru.androidschool.intensiv.api.responses.CreditsResponse
+import ru.androidschool.intensiv.api.responses.MovieDetailsResponse
 
 class MovieDetailsRemoteDataSource(private val service: TMDBInterface) : BaseRemoteDataSource() {
     fun loadItemDetails(id: Int): Observable<Result<MovieDetailsResponse>> =

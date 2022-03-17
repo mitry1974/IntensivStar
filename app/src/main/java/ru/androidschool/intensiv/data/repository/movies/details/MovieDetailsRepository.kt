@@ -4,10 +4,10 @@ import io.reactivex.Observable
 import ru.androidschool.intensiv.api.Result
 import ru.androidschool.intensiv.api.TMDBInterface
 import ru.androidschool.intensiv.api.successed
-import ru.androidschool.intensiv.data.local.database.entity.Actor
-import ru.androidschool.intensiv.data.local.database.entity.MovieDetails
-import ru.androidschool.intensiv.data.repository.mappers.ActorMapper
-import ru.androidschool.intensiv.data.repository.mappers.MovieDetailsMapper
+import ru.androidschool.intensiv.models.Actor
+import ru.androidschool.intensiv.models.MovieDetails
+import ru.androidschool.intensiv.data.repository.mappers.ResponseToActorMapper
+import ru.androidschool.intensiv.data.repository.mappers.RersponseToMovieDetailsMapper
 
 class MovieDetailsRepository() {
     private val remoteDataSource = MovieDetailsRemoteDataSource(TMDBInterface.apiClient)
@@ -16,7 +16,7 @@ class MovieDetailsRepository() {
         remoteDataSource.loadItemDetails(itemId)
             .map { result ->
                 if (result is Result.Success && result.successed) {
-                    MovieDetailsMapper.toVO(result.data)
+                    RersponseToMovieDetailsMapper.toVO(result.data)
                 } else {
                     throw Exception("Error loading movie details")
                 }
@@ -25,7 +25,7 @@ class MovieDetailsRepository() {
     fun getCredits(itemId: Int): Observable<List<Actor>> =
         remoteDataSource.loadCredits(itemId).map { result ->
             if (result is Result.Success && result.successed) {
-                ActorMapper.toVO(result.data.cast ?: emptyList())
+                ResponseToActorMapper.toVO(result.data.cast ?: emptyList())
             } else {
                 throw Exception("Error loading movie credits")
             }

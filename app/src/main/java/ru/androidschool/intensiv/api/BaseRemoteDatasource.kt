@@ -4,7 +4,7 @@ import com.google.gson.Gson
 import io.reactivex.Observable
 import okhttp3.ResponseBody
 import retrofit2.Response
-import ru.androidschool.intensiv.api.model.GenericResponse
+import ru.androidschool.intensiv.api.responses.GenericResponse
 import ru.androidschool.intensiv.util.Constants
 
 abstract class BaseRemoteDataSource {

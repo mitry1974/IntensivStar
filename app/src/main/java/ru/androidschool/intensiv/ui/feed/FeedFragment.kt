@@ -11,7 +11,7 @@ import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.local.database.entity.Movie
+import ru.androidschool.intensiv.models.Movie
 import ru.androidschool.intensiv.data.repository.interactor.MoviesInteractor
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding

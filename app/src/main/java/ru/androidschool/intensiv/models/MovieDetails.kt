@@ -1,4 +1,4 @@
-package ru.androidschool.intensiv.data.local.database.entity
+package ru.androidschool.intensiv.models
 
 class MovieDetails(
     val id: Int,

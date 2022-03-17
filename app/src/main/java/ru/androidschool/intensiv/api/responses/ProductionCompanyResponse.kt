@@ -1,3 +1,3 @@
-package ru.androidschool.intensiv.api.model
+package ru.androidschool.intensiv.api.responses
 
 data class ProductionCompanyResponse(val name: String?)

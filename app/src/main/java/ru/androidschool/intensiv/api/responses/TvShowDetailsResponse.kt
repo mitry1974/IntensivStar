@@ -1,4 +1,4 @@
-package ru.androidschool.intensiv.api.model
+package ru.androidschool.intensiv.api.responses
 
 data class TvShowDetailsResponse(
     val id: Int
