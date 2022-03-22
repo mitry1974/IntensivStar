@@ -14,10 +14,11 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.models.Movie
-import ru.androidschool.intensiv.data.repository.movies.search.SearchMoviesListRepository
+import ru.androidschool.intensiv.data.api.TMDBInterface
+import ru.androidschool.intensiv.data.repository.movies.search.SearchMovieRemoteRepository
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
 import ru.androidschool.intensiv.databinding.FragmentSearchBinding
+import ru.androidschool.intensiv.domain.models.Movie
 import ru.androidschool.intensiv.ui.feed.FeedFragment
 import ru.androidschool.intensiv.ui.feed.FeedFragment.Companion.KEY_SEARCH
 import ru.androidschool.intensiv.ui.feed.MainCardContainer
@@ -28,7 +29,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     private var _binding: FragmentSearchBinding? = null
     private var _searchBinding: FeedHeaderBinding? = null
 
-    private val searchRepository by lazy { SearchMoviesListRepository() }
+    private val searchRepository by lazy { SearchMovieRemoteRepository(TMDBInterface.apiClient) }
 
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()

@@ -4,7 +4,7 @@ import android.view.View
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.viewbinding.BindableItem
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.models.Movie
+import ru.androidschool.intensiv.domain.models.Movie
 import ru.androidschool.intensiv.databinding.ItemSmallBinding
 
 class MoviePreviewItem(
@@ -18,9 +18,9 @@ class MoviePreviewItem(
         view.imagePreview.setOnClickListener {
             onClick.invoke(content)
         }
-        // TODO Получать из модели
+
         Picasso.get()
-            .load("https://www.kinopoisk.ru/images/film_big/1143242.jpg")
+            .load(content.posterPath)
             .into(view.imagePreview)
     }
 

@@ -1,12 +1,11 @@
 package ru.androidschool.intensiv.ui.tvshows
 
-
 import android.view.View
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.viewbinding.BindableItem
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.models.TvShow
 import ru.androidschool.intensiv.databinding.ItemTvShowBinding
+import ru.androidschool.intensiv.domain.models.TvShow
 
 class TvShowItem(
     private val data: TvShow,

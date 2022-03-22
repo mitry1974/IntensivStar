@@ -12,14 +12,23 @@ import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.repository.movies.details.MovieDetailsRepository
+import ru.androidschool.intensiv.data.local.database.MoviesDatabase
+import ru.androidschool.intensiv.data.repository.details.MovieDetailsRepository
+import ru.androidschool.intensiv.data.repository.favorites.FavoritesRepository
 import ru.androidschool.intensiv.databinding.MovieDetailsFragmentBinding
 import ru.androidschool.intensiv.ui.feed.FeedFragment
 
 class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
     private lateinit var binding: MovieDetailsFragmentBinding
 
-    private val repository by lazy { MovieDetailsRepository() }
+    private val movieDetailsRepository by lazy { MovieDetailsRepository() }
+    private val favoritesRepository by lazy {
+        FavoritesRepository(
+            MoviesDatabase.buildDatabase(
+                requireActivity().application
+            )
+        )
+    }
 
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
@@ -42,14 +51,22 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.actors.adapter = adapter
-
+        binding.filmDetailsFavorites.setOnCheckedChangeListener { _, isChecked ->
+            movieId?.let {
+                favoritesRepository.updateFavoriteStatus(it, isChecked)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                    )
+            }
+        }
         updateView()
     }
 
     @SuppressLint("CheckResult")
     private fun updateView() {
         movieId?.let {
-            repository.getItemDetails(it)
+            movieDetailsRepository.getMovieDetails(it)
                 .doOnError { e ->
                     println(e)
                 }
@@ -62,24 +79,28 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
                         studio.text = md.productionCompanies
                         genre.text = md.genres
                         overview.text = md.overview
-                        rating.rating = md.voteAverage / 2
+                        rating.rating = md.voteAverage
+
+                        favoritesRepository.getFavoriteByMovieId(it)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe { filmDetailsFavorites.isChecked = true }
 
                         Picasso.get()
                             .load(md.posterPath)
                             .into(image)
                     }
                 }
-            repository.getCredits(it)
+            movieDetailsRepository.getActors(it)
                 .doOnError { e ->
                     println(e)
                 }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { actorsList ->
-                val actorsItems = actorsList.map { actor -> ActorItem(actor) {} }
-                adapter.apply { addAll(actorsItems) }
-            }
+                    val actorsItems = actorsList.map { actor -> ActorItem(actor) {} }
+                    adapter.apply { addAll(actorsItems) }
+                }
         }
     }
 }
-

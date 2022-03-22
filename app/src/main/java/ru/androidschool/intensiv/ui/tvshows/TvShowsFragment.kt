@@ -11,7 +11,7 @@ import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.repository.movies.tvShows.TvShowsRepository
+import ru.androidschool.intensiv.data.repository.tvShows.TvShowsRepository
 import ru.androidschool.intensiv.databinding.TvShowsFragmentBinding
 
 class TvShowsFragment : Fragment(R.layout.tv_shows_fragment) {
