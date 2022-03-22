@@ -8,14 +8,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.repository.RepositoryAccess
-import ru.androidschool.intensiv.domain.interactors.MoviesInteractor
+import ru.androidschool.intensiv.data.entity.Movie
+import ru.androidschool.intensiv.data.repository.movies.nowPlaying.NowPlayingMoviesListRepository
+import ru.androidschool.intensiv.data.repository.movies.popular.PopularMoviesListRepository
+import ru.androidschool.intensiv.data.repository.movies.upcoming.UpcomingMoviesListRepository
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
-import ru.androidschool.intensiv.domain.models.Movie
 import ru.androidschool.intensiv.ui.afterTextChanged
 import timber.log.Timber
 
@@ -24,7 +26,9 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
     private var _binding: FeedFragmentBinding? = null
     private var _searchBinding: FeedHeaderBinding? = null
 
-    private lateinit var moviesInteractor: MoviesInteractor
+    private val popularMoviesRepository by lazy {  PopularMoviesListRepository() }
+    private val nowPlayingMoviesRepository by lazy {  NowPlayingMoviesListRepository() }
+    private val upcomingMoviesRepository by lazy {  UpcomingMoviesListRepository() }
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -57,6 +61,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         searchBinding.searchToolbar.binding.searchEditText.afterTextChanged {
             Timber.d(it.toString())
             if (it.toString().length > MIN_LENGTH) {
@@ -64,47 +69,45 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
             }
         }
 
-        moviesInteractor = MoviesInteractor.build(requireActivity().application)
-
         binding.moviesRecyclerView.adapter = adapter
-
         updateView()
     }
 
-    private fun applyMovieList(containerName: Int, movieList: List<Movie>) {
-        val movieItemList = movieList.map { mv ->
-            MovieItem(mv) { movie -> openMovieDetails(movie) }
-        }
-        adapter.apply {
-            addAll(
-                listOf(
-                    MainCardContainer(containerName, movieItemList)
-                )
-            )
-        }
-    }
-
     @SuppressLint("CheckResult")
-    private fun updateView() {
-        moviesInteractor.getObservable(RepositoryAccess.OFFLINE_FIRST)
-            .doOnError { println(it) }
+    private fun applyMovieList(containerName: Int, movieList: Observable<List<Movie>>) {
+        movieList.map {
+            it
+                .map { mv ->
+                    MovieItem(mv) { movie ->
+                        openMovieDetails(
+                            movie
+                        )
+                    }
+                }
+        }
+            .doOnError {
+                println(it)
+            }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { binding.feedProgressBar.visibility = View.VISIBLE }
-            .doFinally { binding.feedProgressBar.visibility = View.GONE }
-            .subscribe { lists ->
-                lists[R.string.recommended]?.let {
-                    applyMovieList(R.string.recommended, it)
-                }
-
-                lists[R.string.popular]?.let {
-                    applyMovieList(R.string.popular, it)
-                }
-
-                lists[R.string.upcoming]?.let {
-                    applyMovieList(R.string.upcoming, it)
+            .subscribe { list ->
+                adapter.apply {
+                    addAll(
+                        listOf(
+                            MainCardContainer(
+                                containerName,
+                                list
+                            )
+                        )
+                    )
                 }
             }
+    }
+
+    private fun updateView() {
+        applyMovieList(R.string.recommended, nowPlayingMoviesRepository.getItemsList())
+        applyMovieList(R.string.upcoming, upcomingMoviesRepository.getItemsList())
+        applyMovieList(R.string.popular, popularMoviesRepository.getItemsList())
     }
 
     private fun openMovieDetails(movie: Movie) {

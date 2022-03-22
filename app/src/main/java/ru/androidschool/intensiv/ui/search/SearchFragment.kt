@@ -14,22 +14,22 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.api.TMDBInterface
-import ru.androidschool.intensiv.data.repository.movies.search.SearchMovieRemoteRepository
+import ru.androidschool.intensiv.data.entity.Movie
+import ru.androidschool.intensiv.data.repository.movies.search.SearchMoviesListRepository
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
 import ru.androidschool.intensiv.databinding.FragmentSearchBinding
-import ru.androidschool.intensiv.domain.models.Movie
 import ru.androidschool.intensiv.ui.feed.FeedFragment
 import ru.androidschool.intensiv.ui.feed.FeedFragment.Companion.KEY_SEARCH
 import ru.androidschool.intensiv.ui.feed.MainCardContainer
 import ru.androidschool.intensiv.ui.feed.MovieItem
+import java.util.concurrent.TimeUnit
 
 class SearchFragment : Fragment(R.layout.fragment_search) {
 
     private var _binding: FragmentSearchBinding? = null
     private var _searchBinding: FeedHeaderBinding? = null
 
-    private val searchRepository by lazy { SearchMovieRemoteRepository(TMDBInterface.apiClient) }
+    private val searchRepository by lazy { SearchMoviesListRepository() }
 
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
@@ -66,12 +66,17 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         val searchTerm = requireArguments().getString(KEY_SEARCH)
         searchBinding.searchToolbar.setText(searchTerm)
 
-        searchBinding.searchToolbar.setupObservation { query ->
-            applyMovieList(
-                R.string.found,
-                searchRepository.searchMovies(query)
-            )
-        }
+        searchBinding.searchToolbar.setupObservation()
+            .doOnError {
+                println(it)
+            }
+
+            .subscribe { query ->
+                applyMovieList(
+                    R.string.found,
+                    searchRepository.searchMovies(query)
+                )
+            }
     }
 
     @SuppressLint("CheckResult")
@@ -82,8 +87,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { binding.searchProgressBar.visibility = View.VISIBLE }
-            .doFinally { binding.searchProgressBar.visibility = View.GONE }
             .subscribe { list ->
                 adapter.clear()
                 adapter.apply {

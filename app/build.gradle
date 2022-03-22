@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 
 apply from: "../ktlint.gradle"
 
@@ -45,6 +44,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "androidx.appcompat:appcompat:$supportLibVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
     implementation "com.google.android.material:material:$materialVersion"
@@ -88,14 +88,4 @@ dependencies {
     // rxjava
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxJavaVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.rxJavaVersionAdapterVersion"
-
-    // Room
-    implementation "androidx.room:room-runtime:$rootProject.roomVersion"
-    implementation "androidx.room:room-ktx:$rootProject.roomVersion"
-    kapt "androidx.room:room-compiler:$rootProject.roomVersion"
-
-    // RxJava support for Room
-    implementation "androidx.room:room-rxjava2:$rootProject.roomrx2Version"
-    implementation "android.arch.persistence.room:rxjava2:$rootProject.roomrxVersion"
-    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
 }
