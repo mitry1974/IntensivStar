@@ -1,4 +1,4 @@
-package ru.androidschool.intensiv.ui.movie_details
+package ru.androidschool.intensiv.presentation.movie_details
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -16,7 +16,7 @@ import ru.androidschool.intensiv.data.local.database.MoviesDatabase
 import ru.androidschool.intensiv.data.repository.details.MovieDetailsRepository
 import ru.androidschool.intensiv.data.repository.favorites.FavoritesRepository
 import ru.androidschool.intensiv.databinding.MovieDetailsFragmentBinding
-import ru.androidschool.intensiv.ui.feed.FeedFragment
+import ru.androidschool.intensiv.presentation.feed.FeedFragment
 
 class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
     private lateinit var binding: MovieDetailsFragmentBinding

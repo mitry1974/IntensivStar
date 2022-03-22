@@ -1,4 +1,4 @@
-package ru.androidschool.intensiv.ui.watchlist
+package ru.androidschool.intensiv.presentation.watchlist
 
 import android.annotation.SuppressLint
 import android.os.Bundle
