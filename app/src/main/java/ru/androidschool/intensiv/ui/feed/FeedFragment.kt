@@ -11,10 +11,11 @@ import com.xwray.groupie.GroupieViewHolder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.models.Movie
-import ru.androidschool.intensiv.data.repository.interactor.MoviesInteractor
+import ru.androidschool.intensiv.data.repository.RepositoryAccess
+import ru.androidschool.intensiv.domain.interactors.MoviesInteractor
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
+import ru.androidschool.intensiv.domain.models.Movie
 import ru.androidschool.intensiv.ui.afterTextChanged
 import timber.log.Timber
 
@@ -23,7 +24,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
     private var _binding: FeedFragmentBinding? = null
     private var _searchBinding: FeedHeaderBinding? = null
 
-    private val moviesInteractor by lazy { MoviesInteractor() }
+    private lateinit var moviesInteractor: MoviesInteractor
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -56,7 +57,6 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         searchBinding.searchToolbar.binding.searchEditText.afterTextChanged {
             Timber.d(it.toString())
             if (it.toString().length > MIN_LENGTH) {
@@ -64,7 +64,10 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
             }
         }
 
+        moviesInteractor = MoviesInteractor.build(requireActivity().application)
+
         binding.moviesRecyclerView.adapter = adapter
+
         updateView()
     }
 
@@ -83,7 +86,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
 
     @SuppressLint("CheckResult")
     private fun updateView() {
-        moviesInteractor.getMoviesList()//.map { it.map { mv ->  } }
+        moviesInteractor.getObservable(RepositoryAccess.OFFLINE_FIRST)
             .doOnError { println(it) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

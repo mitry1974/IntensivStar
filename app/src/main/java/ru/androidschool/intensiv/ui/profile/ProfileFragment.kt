@@ -13,6 +13,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.squareup.picasso.Picasso
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import ru.androidschool.intensiv.R
+import ru.androidschool.intensiv.data.local.database.MoviesDatabase
+import ru.androidschool.intensiv.data.repository.favorites.FavoritesRepository
 import ru.androidschool.intensiv.databinding.FragmentProfileBinding
 
 class ProfileFragment : Fragment() {
@@ -78,6 +80,10 @@ class ProfileFragment : Fragment() {
 
             tab.text = spannableStringTitle
         }.attach()
+
+        binding.apply {
+
+        }
     }
 
     override fun onDestroyView() {

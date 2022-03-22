@@ -4,9 +4,9 @@ import android.view.View
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.viewbinding.BindableItem
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.models.Actor
-import ru.androidschool.intensiv.models.Movie
 import ru.androidschool.intensiv.databinding.ItemActorBinding
+import ru.androidschool.intensiv.domain.models.Actor
+import ru.androidschool.intensiv.domain.models.Movie
 
 class ActorItem(
     private val content: Actor,
@@ -22,5 +22,4 @@ class ActorItem(
     override fun getLayout(): Int = R.layout.item_actor
 
     override fun initializeViewBinding(view: View) = ItemActorBinding.bind(view)
-
 }

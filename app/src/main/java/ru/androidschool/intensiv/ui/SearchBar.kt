@@ -81,5 +81,4 @@ class SearchBar @JvmOverloads constructor(
             }
         }
     }
-
 }
