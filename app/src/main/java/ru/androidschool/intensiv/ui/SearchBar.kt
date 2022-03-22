@@ -1,14 +1,16 @@
 package ru.androidschool.intensiv.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import androidx.core.view.isVisible
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.databinding.SearchToolbarBinding
 import ru.androidschool.intensiv.util.Constants.MIN_SEARCH_LENGTH
@@ -39,16 +41,20 @@ class SearchBar @JvmOverloads constructor(
         binding.searchEditText.setText(text)
     }
 
-    fun setupObservation(): Observable<String> {
-        val observable: Observable<String> = Observable.create { emitter ->
-            binding.searchEditText.afterTextChanged { text ->
-                emitter.onNext(text.toString())
-            }
-        }
-        return observable
+    @SuppressLint("CheckResult")
+    fun setupObservation(observer: Consumer<String>) {
+        val searchSubject: PublishSubject<String> = PublishSubject.create()
+        searchSubject
             .debounce(500, TimeUnit.MILLISECONDS)
             .map { it.trim() }
             .filter { it.length > MIN_SEARCH_LENGTH }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+
+        searchSubject.subscribe(observer)
+        binding.searchEditText.afterTextChanged { text ->
+            searchSubject.onNext(text.toString())
+        }
     }
 
     fun clear() {
@@ -75,5 +81,4 @@ class SearchBar @JvmOverloads constructor(
             }
         }
     }
-
 }

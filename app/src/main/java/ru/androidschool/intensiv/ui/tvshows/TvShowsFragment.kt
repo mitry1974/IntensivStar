@@ -1,25 +1,23 @@
 package ru.androidschool.intensiv.ui.tvshows
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import kotlinx.coroutines.launch
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.entity.TvShow
-import ru.androidschool.intensiv.data.repository.movies.tvShows.TvShowsRepository
+import ru.androidschool.intensiv.data.repository.tvShows.TvShowsRepository
 import ru.androidschool.intensiv.databinding.TvShowsFragmentBinding
 
 class TvShowsFragment : Fragment(R.layout.tv_shows_fragment) {
     private lateinit var binding: TvShowsFragmentBinding
 
     private val repository by lazy { TvShowsRepository() }
-
-    private lateinit var tvShowsList: List<TvShow>
 
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
@@ -43,18 +41,15 @@ class TvShowsFragment : Fragment(R.layout.tv_shows_fragment) {
         initData()
     }
 
+    @SuppressLint("CheckResult")
     private fun initData() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            tvShowsList = repository.getTvShows()
-            updateView()
+        repository.getTvShows().map {
+            it.map { tsi -> TvShowItem(tsi) {} }
         }
-    }
-
-    private fun updateView() {
-
-        val tvShowItems = tvShowsList.map {
-            TvShowItem(it) {}
-        }
-        adapter.apply { addAll(tvShowItems) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { binding.tvshowsProgressBar.visibility = View.VISIBLE }
+            .doFinally { binding.tvshowsProgressBar.visibility = View.GONE }
+            .subscribe { list -> adapter.apply { addAll(list) } }
     }
 }
