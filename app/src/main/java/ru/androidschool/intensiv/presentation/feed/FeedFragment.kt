@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
@@ -24,7 +25,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
     private var _binding: FeedFragmentBinding? = null
     private var _searchBinding: FeedHeaderBinding? = null
 
-    private lateinit var moviesInteractor: MoviesInteractor
+    private lateinit var viewModel: FeedViewModel
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -49,6 +50,8 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        viewModel = ViewModelProvider(this)[FeedViewModel::class.java]
+
         _binding = FeedFragmentBinding.inflate(inflater, container, false)
         _searchBinding = FeedHeaderBinding.bind(binding.root)
         return binding.root
@@ -63,8 +66,6 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
                 openSearch(it.toString())
             }
         }
-
-        moviesInteractor = MoviesInteractor.build(requireActivity().application)
 
         binding.moviesRecyclerView.adapter = adapter
 
