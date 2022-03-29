@@ -13,7 +13,7 @@ class TvShowsPresenter(private val repository: TvShowsRepository) :
 
     @SuppressLint("CheckResult")
     fun loadTvShows() {
-        repository.getTvShows()
+        repository.loadItemsList()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { view?.showLoader() }
