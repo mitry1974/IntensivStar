@@ -10,7 +10,6 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import ru.androidschool.intensiv.R
 import ru.androidschool.intensiv.data.api.TMDBInterface
-import ru.androidschool.intensiv.data.repository.tvShows.TvShowsRemoteRepository
 import ru.androidschool.intensiv.data.repository.tvShows.TvShowsRepository
 import ru.androidschool.intensiv.databinding.TvShowsFragmentBinding
 import ru.androidschool.intensiv.domain.models.TvShow
@@ -21,7 +20,7 @@ class TvShowsFragment : Fragment(R.layout.tv_shows_fragment), TvShowsPresenter.T
     private val presenter by lazy {
         TvShowsPresenter(
             TvShowsRepository(
-                TvShowsRemoteRepository(TMDBInterface.apiClient)
+                TMDBInterface.apiClient
             )
         )
     }
