@@ -1,3 +1,4 @@
 package ru.androidschool.intensiv.domain.models
 
-data class Favorite(val movieId: Int)
+@JvmInline
+value class Favorite(val movieId: Int)
