@@ -1,4 +1,4 @@
-package ru.androidschool.intensiv.ui.profile
+package ru.androidschool.intensiv.presentation.profile
 
 import android.os.Bundle
 import android.text.SpannableString
@@ -13,8 +13,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.squareup.picasso.Picasso
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.local.database.MoviesDatabase
-import ru.androidschool.intensiv.data.repository.favorites.FavoritesRepository
 import ru.androidschool.intensiv.databinding.FragmentProfileBinding
 
 class ProfileFragment : Fragment() {

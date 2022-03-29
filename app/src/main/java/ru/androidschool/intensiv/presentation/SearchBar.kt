@@ -1,4 +1,4 @@
-package ru.androidschool.intensiv.ui
+package ru.androidschool.intensiv.presentation
 
 import android.annotation.SuppressLint
 import android.content.Context

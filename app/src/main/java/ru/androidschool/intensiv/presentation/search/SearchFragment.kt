@@ -1,4 +1,4 @@
-package ru.androidschool.intensiv.ui.search
+package ru.androidschool.intensiv.presentation.search
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -19,10 +19,10 @@ import ru.androidschool.intensiv.data.repository.movies.search.SearchMovieRemote
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
 import ru.androidschool.intensiv.databinding.FragmentSearchBinding
 import ru.androidschool.intensiv.domain.models.Movie
-import ru.androidschool.intensiv.ui.feed.FeedFragment
-import ru.androidschool.intensiv.ui.feed.FeedFragment.Companion.KEY_SEARCH
-import ru.androidschool.intensiv.ui.feed.MainCardContainer
-import ru.androidschool.intensiv.ui.feed.MovieItem
+import ru.androidschool.intensiv.presentation.feed.FeedFragment
+import ru.androidschool.intensiv.presentation.feed.FeedFragment.Companion.KEY_SEARCH
+import ru.androidschool.intensiv.presentation.feed.MainCardContainer
+import ru.androidschool.intensiv.presentation.feed.MovieItem
 
 class SearchFragment : Fragment(R.layout.fragment_search) {
 
