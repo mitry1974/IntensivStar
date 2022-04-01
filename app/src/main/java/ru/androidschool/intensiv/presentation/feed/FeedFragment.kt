@@ -1,22 +1,21 @@
 package ru.androidschool.intensiv.presentation.feed
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.repository.RepositoryAccess
-import ru.androidschool.intensiv.domain.interactors.MoviesInteractor
 import ru.androidschool.intensiv.databinding.FeedFragmentBinding
 import ru.androidschool.intensiv.databinding.FeedHeaderBinding
+import ru.androidschool.intensiv.domain.interactors.MoviesInteractor
 import ru.androidschool.intensiv.domain.models.Movie
 import ru.androidschool.intensiv.presentation.afterTextChanged
+import ru.androidschool.intensiv.util.extensions.doOnChange
 import timber.log.Timber
 
 class FeedFragment : Fragment(R.layout.feed_fragment) {
@@ -24,7 +23,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
     private var _binding: FeedFragmentBinding? = null
     private var _searchBinding: FeedHeaderBinding? = null
 
-    private lateinit var moviesInteractor: MoviesInteractor
+    private lateinit var viewModel: FeedViewModel
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -49,6 +48,12 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        viewModel = ViewModelProvider(
+            this, FeedViewModelFactory(
+                MoviesInteractor.build(requireActivity().application)
+            )
+        )[FeedViewModel::class.java]
+
         _binding = FeedFragmentBinding.inflate(inflater, container, false)
         _searchBinding = FeedHeaderBinding.bind(binding.root)
         return binding.root
@@ -64,11 +69,33 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
             }
         }
 
-        moviesInteractor = MoviesInteractor.build(requireActivity().application)
-
         binding.moviesRecyclerView.adapter = adapter
 
-        updateView()
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
+        viewModel.isLoading.doOnChange(this) {
+            if (it) showLoader() else hideLoader()
+        }
+
+        viewModel.error.doOnChange(this) {
+            showToast(it)
+        }
+
+        viewModel.feedData.doOnChange(this) { lists ->
+            lists[R.string.recommended]?.let {
+                applyMovieList(R.string.recommended, it)
+            }
+
+            lists[R.string.popular]?.let {
+                applyMovieList(R.string.popular, it)
+            }
+
+            lists[R.string.upcoming]?.let {
+                applyMovieList(R.string.upcoming, it)
+            }
+        }
     }
 
     private fun applyMovieList(containerName: Int, movieList: List<Movie>) {
@@ -84,27 +111,16 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
         }
     }
 
-    @SuppressLint("CheckResult")
-    private fun updateView() {
-        moviesInteractor.getObservable(RepositoryAccess.OFFLINE_FIRST)
-            .doOnError { println(it) }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { binding.feedProgressBar.visibility = View.VISIBLE }
-            .doFinally { binding.feedProgressBar.visibility = View.GONE }
-            .subscribe { lists ->
-                lists[R.string.recommended]?.let {
-                    applyMovieList(R.string.recommended, it)
-                }
+    private fun showLoader() {
+        binding.feedProgressBar.visibility = View.VISIBLE
+    }
 
-                lists[R.string.popular]?.let {
-                    applyMovieList(R.string.popular, it)
-                }
+    private fun hideLoader() {
+        binding.feedProgressBar.visibility = View.GONE
+    }
 
-                lists[R.string.upcoming]?.let {
-                    applyMovieList(R.string.upcoming, it)
-                }
-            }
+    private fun showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
+        Toast.makeText(context, message, duration).show()
     }
 
     private fun openMovieDetails(movie: Movie) {
