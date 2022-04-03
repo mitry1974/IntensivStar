@@ -1,41 +1,32 @@
 package ru.androidschool.intensiv.presentation.movie_details
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.squareup.picasso.Picasso
+import androidx.lifecycle.ViewModelProvider
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.R
-import ru.androidschool.intensiv.data.local.database.MoviesDatabase
-import ru.androidschool.intensiv.data.repository.details.MovieDetailsRepository
-import ru.androidschool.intensiv.data.repository.favorites.FavoritesRepository
+import ru.androidschool.intensiv.dagger.di.AppModule
+import ru.androidschool.intensiv.dagger.di.DaggerMovieDetailsViewModelComponent
+import ru.androidschool.intensiv.dagger.di.view_model_factory.ViewModelFactory
 import ru.androidschool.intensiv.databinding.MovieDetailsFragmentBinding
 import ru.androidschool.intensiv.presentation.feed.FeedFragment
+import ru.androidschool.intensiv.util.extensions.doOnChange
+import javax.inject.Inject
 
 class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
     private lateinit var binding: MovieDetailsFragmentBinding
 
-    private val movieDetailsRepository by lazy { MovieDetailsRepository() }
-    private val favoritesRepository by lazy {
-        FavoritesRepository(
-            MoviesDatabase.buildDatabase(
-                requireActivity().application
-            )
-        )
-    }
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+    private lateinit var viewModel: MovieDetailsViewModel
 
     private val adapter by lazy {
         GroupAdapter<GroupieViewHolder>()
-    }
-
-    private val movieId by lazy {
-        arguments?.getInt(FeedFragment.KEY_ID)
     }
 
     override fun onCreateView(
@@ -44,6 +35,12 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
         savedInstanceState: Bundle?
     ): View? {
         binding = MovieDetailsFragmentBinding.inflate(inflater, container, false)
+
+        DaggerMovieDetailsViewModelComponent.builder()
+            .appModule(AppModule(requireActivity().application))
+            .build()
+            .inject(this)
+        viewModel  = ViewModelProvider(this, viewModelFactory)[MovieDetailsViewModel::class.java]
         return binding.root
     }
 
@@ -51,56 +48,47 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.actors.adapter = adapter
-        binding.filmDetailsFavorites.setOnCheckedChangeListener { _, isChecked ->
-            movieId?.let {
-                favoritesRepository.updateFavoriteStatus(it, isChecked)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                    )
+        viewModel.movieId =  arguments?.getInt(FeedFragment.KEY_ID)
+        binding.filmDetailsFavorites.setOnCheckedChangeListener { _, isFavorite->
+            viewModel.movieId?.let {
+                viewModel.setFavoriteStatus(it, isFavorite)
             }
         }
-        updateView()
+        observeViewModel()
+        viewModel.getMovieDetails()
     }
 
-    @SuppressLint("CheckResult")
-    private fun updateView() {
-        movieId?.let {
-            movieDetailsRepository.getMovieDetails(it)
-                .doOnError { e ->
-                    println(e)
-                }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { md ->
-                    binding.apply {
-                        movieDetailsFilmName.text = md.title
-                        movieYear.text = md.year
-                        studio.text = md.productionCompanies
-                        genre.text = md.genres
-                        overview.text = md.overview
-                        rating.rating = md.voteAverage
-
-                        favoritesRepository.getFavoriteByMovieId(it)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe { filmDetailsFavorites.isChecked = true }
-
-                        Picasso.get()
-                            .load(md.posterPath)
-                            .into(image)
-                    }
-                }
-            movieDetailsRepository.getActors(it)
-                .doOnError { e ->
-                    println(e)
-                }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { actorsList ->
-                    val actorsItems = actorsList.map { actor -> ActorItem(actor) {} }
-                    adapter.apply { addAll(actorsItems) }
-                }
+    private fun observeViewModel() {
+        viewModel.isFavorite.doOnChange(this) {
+            binding.filmDetailsFavorites.isChecked = it
         }
+
+        viewModel.movieDetails.doOnChange(this) { md ->
+            binding.apply {
+                movieDetailsFilmName.text = md.title
+                movieYear.text = md.year
+                studio.text = md.productionCompanies
+                genre.text = md.genres
+                overview.text = md.overview
+                rating.rating = md.voteAverage
+            }
+        }
+
+        viewModel.actors.doOnChange(this) { actorsList ->
+            val actorsItems = actorsList.map { actor -> ActorItem(actor) {} }
+            adapter.apply { addAll(actorsItems) }
+        }
+
+        viewModel.posterImage.doOnChange(this) {
+            binding.image.setImageBitmap(it)
+        }
+
+        viewModel.errorMessage.doOnChange(this) {
+            showToast(it)
+        }
+
+    }
+    private fun showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
+        Toast.makeText(context, message, duration).show()
     }
 }
