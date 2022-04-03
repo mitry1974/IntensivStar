@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import ru.androidschool.intensiv.data.repository.details.MovieDetailsRepository
 import ru.androidschool.intensiv.data.repository.favorites.FavoritesRepository
@@ -38,10 +39,12 @@ class MovieDetailsViewModel @Inject constructor(
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage = _errorMessage
 
+    private val disposables = CompositeDisposable()
+
     @SuppressLint("CheckResult")
     fun getMovieDetails() {
         movieId?.let {
-            movieDetailsRepository.getMovieDetails(it)
+            val moviesDisposable = movieDetailsRepository.getMovieDetails(it)
                 .doOnError { e ->
                     println(e)
                 }
@@ -56,7 +59,7 @@ class MovieDetailsViewModel @Inject constructor(
                                 bitmap: Bitmap?,
                                 from: Picasso.LoadedFrom?
                             ) {
-                                _posterImage.postValue(bitmap)
+                                bitmap?.let{bmp -> _posterImage.postValue(bmp) }
                             }
 
                             override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) =
@@ -65,8 +68,9 @@ class MovieDetailsViewModel @Inject constructor(
                             override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
                         })
                 }
+            disposables.add(moviesDisposable)
 
-            movieDetailsRepository.getActors(it)
+            val actorsDisposable = movieDetailsRepository.getActors(it)
                 .doOnError { e ->
                     println(e)
                 }
@@ -74,28 +78,34 @@ class MovieDetailsViewModel @Inject constructor(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { actorsList -> _actors.postValue(actorsList) }
 
+            disposables.add(actorsDisposable)
             getFavoriteStatus(it)
         }
     }
 
     @SuppressLint("CheckResult")
     fun getFavoriteStatus(movieId: Int) {
-        favoritesRepository.getFavoriteByMovieId(movieId)
+        val fvDisposable = favoritesRepository.getFavoriteByMovieId(movieId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 _isFavorite.postValue(true)
             }
-
+        disposables.add(fvDisposable)
     }
 
     fun setFavoriteStatus(movieId: Int, isFavorite: Boolean) {
-        favoritesRepository.updateFavoriteStatus(movieId, isFavorite)
+        val fvDisposable = favoritesRepository.updateFavoriteStatus(movieId, isFavorite)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
             )
+        disposables.add(fvDisposable)
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        disposables.dispose()
+    }
 
 }
