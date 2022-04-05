@@ -7,8 +7,9 @@ import ru.androidschool.intensiv.data.mappers.EntityToMovieMapper
 import ru.androidschool.intensiv.data.mappers.FavoriteToEntityMapper
 import ru.androidschool.intensiv.domain.models.Favorite
 import ru.androidschool.intensiv.domain.models.Movie
+import javax.inject.Inject
 
-class FavoritesRepository(private val database: MoviesDatabase) {
+class FavoritesRepository @Inject constructor(private val database: MoviesDatabase) {
     fun getFavoriteMovies(): Observable<List<Movie>> =
         database.favoritesDao().getFavoriteMovies()
             .map { it.map { fe -> EntityToMovieMapper.toVO(fe) } }

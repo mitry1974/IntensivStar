@@ -5,7 +5,7 @@ import dagger.Provides
 import ru.androidschool.intensiv.data.api.TMDBInterface
 
 @Module
-class TMDIInterfaceModule {
+class NetworkModule {
     @Provides
     fun providesTMDIInterface() = TMDBInterface.apiClient
 }
