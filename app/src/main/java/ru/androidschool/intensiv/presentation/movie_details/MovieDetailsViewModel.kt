@@ -33,9 +33,6 @@ class MovieDetailsViewModel @Inject constructor(
     private val _isFavorite = MutableLiveData<Boolean>()
     val isFavorite: LiveData<Boolean> = _isFavorite
 
-    private val _posterImage = MutableLiveData<Bitmap>()
-    val posterImage = _posterImage
-
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage = _errorMessage
 
@@ -50,24 +47,7 @@ class MovieDetailsViewModel @Inject constructor(
                 }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { md ->
-                    _movieDetails.postValue(md)
-                    Picasso.get()
-                        .load(md.posterPath)
-                        .into(object : Target {
-                            override fun onBitmapLoaded(
-                                bitmap: Bitmap?,
-                                from: Picasso.LoadedFrom?
-                            ) {
-                                bitmap?.let{bmp -> _posterImage.postValue(bmp) }
-                            }
-
-                            override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) =
-                                _errorMessage.postValue("Error loading movie details poster")
-
-                            override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
-                        })
-                }
+                .subscribe { md -> _movieDetails.postValue(md) }
             disposables.add(moviesDisposable)
 
             val actorsDisposable = movieDetailsRepository.getActors(it)

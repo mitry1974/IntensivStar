@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import ru.androidschool.intensiv.R
@@ -72,6 +73,10 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
                 overview.text = md.overview
                 rating.rating = md.voteAverage
             }
+
+            Picasso.get()
+                .load(md.posterPath)
+                .into(binding.image)
         }
 
         viewModel.actors.doOnChange(this) { actorsList ->
@@ -79,9 +84,6 @@ class MovieDetailsFragment : Fragment(R.layout.movie_details_fragment) {
             adapter.apply { addAll(actorsItems) }
         }
 
-        viewModel.posterImage.doOnChange(this) {
-            binding.image.setImageBitmap(it)
-        }
 
         viewModel.errorMessage.doOnChange(this) {
             showToast(it)
