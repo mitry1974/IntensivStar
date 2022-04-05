@@ -1,13 +1,9 @@
 package ru.androidschool.intensiv.presentation.movie_details
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -15,6 +11,7 @@ import ru.androidschool.intensiv.data.repository.details.MovieDetailsRepository
 import ru.androidschool.intensiv.data.repository.favorites.FavoritesRepository
 import ru.androidschool.intensiv.domain.models.Actor
 import ru.androidschool.intensiv.domain.models.MovieDetails
+import ru.androidschool.intensiv.util.extensions.applyObservableTransformer
 import javax.inject.Inject
 
 class MovieDetailsViewModel @Inject constructor(
@@ -44,9 +41,12 @@ class MovieDetailsViewModel @Inject constructor(
             val moviesDisposable = movieDetailsRepository.getMovieDetails(it)
                 .doOnError { e ->
                     println(e)
-                }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                }.compose(
+                    applyObservableTransformer(
+                        Schedulers.io(),
+                        AndroidSchedulers.mainThread()
+                    )
+                )
                 .subscribe { md -> _movieDetails.postValue(md) }
             disposables.add(moviesDisposable)
 
@@ -54,8 +54,12 @@ class MovieDetailsViewModel @Inject constructor(
                 .doOnError { e ->
                     println(e)
                 }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .compose(
+                    applyObservableTransformer(
+                        Schedulers.io(),
+                        AndroidSchedulers.mainThread()
+                    )
+                )
                 .subscribe { actorsList -> _actors.postValue(actorsList) }
 
             disposables.add(actorsDisposable)
