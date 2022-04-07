@@ -98,4 +98,9 @@ dependencies {
     implementation "androidx.room:room-rxjava2:$rootProject.roomrx2Version"
     implementation "android.arch.persistence.room:rxjava2:$rootProject.roomrxVersion"
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
+
+    // Dagger
+    implementation "com.google.dagger:dagger:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    compileOnly 'javax.annotation:jsr250-api:1.0'
 }

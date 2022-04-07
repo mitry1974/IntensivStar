@@ -56,6 +56,7 @@ class FeedFragment : Fragment(R.layout.feed_fragment) {
 
         _binding = FeedFragmentBinding.inflate(inflater, container, false)
         _searchBinding = FeedHeaderBinding.bind(binding.root)
+
         return binding.root
     }
 

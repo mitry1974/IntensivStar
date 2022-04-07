@@ -3,11 +3,12 @@ package ru.androidschool.intensiv
 import android.app.Application
 import timber.log.Timber
 
-class MovieFinderApp : Application() {
+class MovieFinderApp() : Application() {
 
     override fun onCreate() {
         super.onCreate()
         instance = this
+
         initDebugTools()
     }
 

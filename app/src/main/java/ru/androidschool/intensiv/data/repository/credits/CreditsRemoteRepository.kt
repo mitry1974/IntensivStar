@@ -6,8 +6,9 @@ import ru.androidschool.intensiv.data.api.TMDBInterface
 import ru.androidschool.intensiv.data.api.responses.CreditsResponse
 import ru.androidschool.intensiv.data.mappers.ResponseToActorMapper
 import ru.androidschool.intensiv.domain.models.Actor
+import javax.inject.Inject
 
-class CreditsRemoteRepository(private val service: TMDBInterface) :
+class CreditsRemoteRepository @Inject constructor(private val service: TMDBInterface) :
     BaseRemoteRepository<CreditsResponse>() {
     fun loadCredits(movieId: Int): Observable<List<Actor>> =
         getResult {
